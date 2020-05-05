@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { LoginService } from './login.service';
-import { TOKENKEY } from './const';
+import { TOKENKEY, VALID_TOKEN } from './const';
 import { GetToken } from './utils';
 
 
@@ -103,32 +103,30 @@ describe('Login Service with JwtHelperService spy', () => {
 
   it('isLoggedIn() should return true if there is a token', () => {
     // There is a token
-    localStorage.setItem(storageTokenKey, '1234');
+    localStorage.setItem(storageTokenKey, VALID_TOKEN);
 
     // We pretend it's not expired from JwtHelperService external dependency
     const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);
     const stubValue = false;
     spy.isTokenExpired.and.returnValue(stubValue);
 
-
-    // spyOn quickly mock a method of any existing service
-   // spy = spyOn(JwtHelperService, 'isTokenExpired').and.returnValue(false); 
-
     const res = service.isLoggedIn();
 
      expect(res).toBeTruthy();
-     expect(spy).toHaveBeenCalled();
   });
 
   it('isLoggedIn() should return false if there is no token', () => {
-    // No token
+    // No token  
+
     // Spy for external dependency but should not be called anyway
-   // spy = spyOn(JwtHelperService, 'isTokenExpired').and.returnValue(false);    
+    const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);
+    const stubValue = false;
+    spy.isTokenExpired.and.returnValue(stubValue);
 
-    //let res = service.isLoggedIn();
+    let res = service.isLoggedIn();
 
-    // expect(res).toBeFalsy();
-    // expect(spy).not.toHaveBeenCalled();
+     expect(res).toBeFalsy();
+     expect(spy.isTokenExpired).not.toHaveBeenCalled();
   });
 
 });
