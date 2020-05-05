@@ -1,18 +1,46 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { JwtModule } from '@auth0/angular-jwt';
+import { AdminService } from './services/admin.service';
+import { ErrorComponent } from './common/error.component';
 import { AppRoutingModule } from './app-routing.module';
+import { LoginComponent } from './common/login.component';
+import { LoginService } from './services/login.service';
+import { LoginRouteGuard } from './services/login-route-guard.service';
+import { AdminComponent } from './common/admin.component';
+import { ContactComponent } from './common/contact.component';
+import { HomeComponent } from './common/home.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { GetToken } from './services/utils';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    ContactComponent,
+    AdminComponent,
+    LoginComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    FormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: GetToken,
+        whitelistedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net']
+      }
+    }),
   ],
-  providers: [],
+  providers: [
+    LoginRouteGuard,
+    LoginService,
+    AdminService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

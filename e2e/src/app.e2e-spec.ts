@@ -1,23 +1,25 @@
-import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { ProductListPage } from './product-list.po';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+describe('Product List', () => {
+  let page: ProductListPage;
 
-  beforeEach(() => {
-    page = new AppPage();
+  beforeEach(async() => {
+    page = new ProductListPage();
+    await page.navigateTo();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('angular-demo-testing app is running!');
+  it('should display correct title', () => {
+    expect(page.getTitle()).toEqual('Products');
   });
 
-  afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    expect(logs).not.toContain(jasmine.objectContaining({
-      level: logging.Level.SEVERE,
-    } as logging.Entry));
+  it('should get the number of products', async() => {
+    const list = await page.getProductListElements();
+    expect(list.length).toBe(5);
+  });
+
+  it('should get the product name after sort', async() => {
+    await page.getSortByNameButtonElement().click();
+    const elem = await page.getFirstProductNameElement();
+    expect(elem.getText()).toBe('665');
   });
 });
