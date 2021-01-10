@@ -6,10 +6,6 @@ export class FavouriteService {
 
     constructor() { }
 
-    get favourite() {
-        return this._favourites;
-    }
-
     private _favourites: Set<Product> = new Set();
     get favourites(): Set<Product> {
         return this._favourites;

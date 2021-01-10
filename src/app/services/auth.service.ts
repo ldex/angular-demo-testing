@@ -5,13 +5,13 @@ import { map, catchError } from "rxjs/operators";
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TOKENKEY, AUTH_BASE_URL } from './const';
 
-interface LoginResponse {
+interface AuthResponse {
   error: string,
   token: string
 }
 
 @Injectable()
-export class LoginService {
+export class AuthService {
 
   private storageTokenKey: string = TOKENKEY;
   public baseUrl: string = AUTH_BASE_URL;
@@ -23,15 +23,10 @@ export class LoginService {
 
   login(username: string, password: string): Observable<boolean> {
 
-      let body = {
-        email: username,
-        password: password
-      };
-
     // Use http and your backend to async authenticate the user
     // If no error, you get back a security token
     return this.http
-      .post<LoginResponse>(this.baseUrl, body)
+    .post<AuthResponse>(this.baseUrl, { username, password })
       .pipe(
         map(
           response => {

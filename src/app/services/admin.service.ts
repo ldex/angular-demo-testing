@@ -1,24 +1,18 @@
-import { environment } from './../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment, config } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from "rxjs/operators";
 
 @Injectable()
 export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  private baseUrl: string = 'http://your_rest_api.net/api/profile';
-  private storageKey: string = 'auth_token';
+  private baseUrl: string = config.adminApiUrl;
 
   getProfile(): Observable<string> {
 
-    const authToken = localStorage.getItem(this.storageKey);
-    const headers = {'Authorization': `Bearer ${authToken}` };
-    const demo = true;
-
-    if(demo) {
+    if(environment.demo) {
 
       // Demo mode
       return of('Secured info!');
@@ -26,9 +20,11 @@ export class AdminService {
     } else {
 
       // Real server call here!
+      // Authorization token will be automatically sent to the server in the Http Headers with an interceptor
+      // (auth-interceptor or automatically via the angular-jwt library)
       return this
               .http
-              .get<string>(this.baseUrl, { headers });
+              .get<string>(`${this.baseUrl}/profile`);
     }
   }
 

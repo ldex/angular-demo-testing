@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { LoginService } from './../services/login.service';
+import { AuthService } from '../services/auth.service';
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { NgForm } from "@angular/forms";
 
@@ -12,7 +12,7 @@ export class LoginComponent {
     error: string = '';
 
     constructor(
-        private loginService: LoginService,
+        private loginService: AuthService,
         private router: Router
     ) { }
 

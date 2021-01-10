@@ -1,68 +1,80 @@
 import { Product } from './../products/product.interface';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, tap, flatMap, first, catchError, shareReplay, switchMap } from "rxjs/operators";
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { config } from 'src/environments/environment';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import {
+    flatMap,
+    first,
+    shareReplay,
+    map,
+    delay,
+    filter,
+    switchMap,
+    catchError
+  } from "rxjs/operators";
 
 @Injectable()
 export class ProductService {
 
-    private baseUrl: string = "http://storerestservice.azurewebsites.net/api/products/";
+    private baseUrl: string = `${config.apiUrl}/products`;
 
-    private products$: Observable<Product[]>;
+    private products = new BehaviorSubject<Product[]>([]);
+    products$: Observable<Product[]> = this.products.asObservable();
+    productsTotalNumber$: Observable<number>;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        this.loadProducts();
+        this.initProductsTotalNumber();
+    }
 
     deleteProduct(id: number): Observable<any> {
-        return this.http
-            .delete(`${this.baseUrl}${id}`); // Delete product from the server            
+        return this.http.delete(`${this.baseUrl}/${id}`);           
     }
 
     insertProduct(newProduct: Product): Observable<Product> {
-        return this.http
-            .post<Product>(this.baseUrl, newProduct);
+        return this.http.post<Product>(this.baseUrl, newProduct);
     }
 
     getProductById(id: number): Observable<Product> {
-        return this
-            .getProducts()
+        return this.products$.pipe(
+          flatMap(p => p),
+          first(product => product.id == id)
+        );
+    }
+
+    private initProductsTotalNumber() {
+        this.productsTotalNumber$ =
+            this
+            .http
+            .get<number>(this.baseUrl + "/count")
             .pipe(
-                flatMap(products => products),
-                first(product => product.id == id),
-                catchError(this.handleError)
-            )
+                shareReplay()
+            );
+    }      
+
+    loadProducts(skip: number = 0, take: number = 10): void {
+        let url = `${this.baseUrl}?$skip=${skip}&$top=${take}&$orderby=ModifiedDate%20desc`;
+    
+        if (skip == 0 && this.products.value.length > 0) return;
+    
+        this.http
+          .get<Product[]>(url)
+          .pipe(
+            delay(1000),
+            shareReplay()
+          )
+          .subscribe(products => {
+            let currentProducts = this.products.value;
+            let mergedProducts = currentProducts.concat(products);
+            this.products.next(mergedProducts);
+          });
     }
 
-    getProducts(skip:number = 0, take:number = 10): Observable<Product[]> {
-        let url:string = this.baseUrl;
-        
-        if (!this.products$) {
-            this.products$ = this.http
-                .get<Product[]>(url)
-                .pipe(
-                    shareReplay(),
-                    catchError(this.handleError)
-                );
-        }
-        return this.products$;
-
-    }
-
-    getMoreProducts(skip:number = 0, take:number = 10): Observable<Product[]> {
-        let url:string = this.baseUrl + `?$skip=${skip}&$top=${take}&$orderby=ModifiedDate%20desc`;
-
-        const combine$: Observable<Product[]> = 
-            this.products$.pipe(switchMap(
-                res => { return this.http.get<Product[]>(url).pipe(shareReplay()) },
-                (currentProducts, moreProducts) => currentProducts.concat(moreProducts)
-            ));
-        this.products$ = combine$.pipe(shareReplay());  
-
-        return this.products$;      
-    }
-
-    clearCache() {
-        this.products$ = null;
+    clearList() {
+        this.products.next([]);
+        this.loadProducts();    
+        this.initProductsTotalNumber();
     }
 
     private handleError(errorResponse: HttpErrorResponse) {
@@ -76,6 +88,6 @@ export class ProductService {
             errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`;
         }
         console.error(errorMsg);
-        return Observable.throw(errorMsg);
+        return throwError(errorMsg);
     }
 }

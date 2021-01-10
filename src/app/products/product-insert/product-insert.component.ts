@@ -34,7 +34,7 @@ export class ProductInsertComponent implements OnInit {
       product => {
         console.log('New Product Posted.');
         console.log(product);
-        this.productService.clearCache();
+        this.productService.clearList();
         this.router.navigateByUrl("/products");
       },
       error => console.log('Could not post product. ' + error),

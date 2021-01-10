@@ -3,7 +3,7 @@ import { AdminService } from './services/admin.service';
 import { ErrorComponent } from './common/error.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './common/login.component';
-import { LoginService } from './services/login.service';
+import { AuthService } from './services/auth.service';
 import { LoginRouteGuard } from './services/login-route-guard.service';
 import { AdminComponent } from './common/admin.component';
 import { ContactComponent } from './common/contact.component';
@@ -38,7 +38,7 @@ import { GetToken } from './services/utils';
   ],
   providers: [
     LoginRouteGuard,
-    LoginService,
+    AuthService,
     AdminService,
   ],
   bootstrap: [AppComponent]

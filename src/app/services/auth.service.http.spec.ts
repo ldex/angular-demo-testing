@@ -2,13 +2,13 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
-import { LoginService } from './login.service';
+import { AuthService } from './auth.service';
 import { TOKENKEY, AUTH_BASE_URL } from './const';
 import { GetToken } from './utils';
 
 // Tests in the context of the Angular Framework with a TestBed
 // Replacing HTTP calls with a httpMock
-describe('Login Service mocking Http', () => {
+describe('Auth Service mocking Http', () => {
   let service, httpMock, jwtHelper;
   const baseUrl: string = AUTH_BASE_URL;
   const storageTokenKey: string = TOKENKEY;
@@ -27,13 +27,13 @@ describe('Login Service mocking Http', () => {
         })
       ],
       providers: [
-        LoginService, 
+        AuthService, 
         JwtHelperService
       ]
     });
 
     // resolve dependencies using the TestBed injector
-    service = TestBed.inject(LoginService);
+    service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);    
     jwtHelper = TestBed.inject(JwtHelperService);
   });

@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
-import { LoginService } from './login.service';
+import { AuthService } from './auth.service';
 import { TOKENKEY } from './const';
 import { GetToken } from './utils';
 
@@ -14,7 +14,7 @@ class JwtHelperServiceMock {
 }
 
 // Tests in the context of the Angular Framework with a TestBed
-describe('Login Service with JwtHelperService mock', () => {
+describe('Auth Service with JwtHelperService mock', () => {
   let service, jwtHelper;
   const storageTokenKey: string = TOKENKEY;
 
@@ -32,12 +32,12 @@ describe('Login Service with JwtHelperService mock', () => {
         })
       ],
       providers: [
-        LoginService, 
+        AuthService, 
         {provide: JwtHelperService, useClass: JwtHelperServiceMock}] // Swap the real JwtHelper service with our mock
     });
 
     // resolve dependencies using the TestBed injector
-    service = TestBed.inject(LoginService);    
+    service = TestBed.inject(AuthService);    
     jwtHelper = TestBed.inject(JwtHelperService);
   });
 

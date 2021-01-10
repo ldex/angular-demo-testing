@@ -2,13 +2,13 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
-import { LoginService } from './login.service';
-import { TOKENKEY, VALID_TOKEN } from './const';
+import { AuthService } from './auth.service';
+import { TOKENKEY, FAKE_VALID_AUTH_TOKEN } from './const';
 import { GetToken } from './utils';
 
 
 // Tests without a TestBed
-describe('Login Service with Http and jwtHelper jasmine mock, no module setup', () => {
+describe('Auth Service with Http and jwtHelper jasmine mock, no module setup', () => {
     const storageTokenKey: string = TOKENKEY;
 
     afterEach(() => {
@@ -30,7 +30,7 @@ describe('Login Service with Http and jwtHelper jasmine mock, no module setup', 
       // Create a mock for HttpClient
       const httpMock = jasmine.createSpyObj('HttpClient', ["post"]) ;
 
-      const srv = new LoginService(httpMock, jwtServiceMock);
+      const srv = new AuthService(httpMock, jwtServiceMock);
 
       const res = srv.isLoggedIn();
 
@@ -48,7 +48,7 @@ describe('Login Service with Http and jwtHelper jasmine mock, no module setup', 
       // Create a mock for HttpClient
       const httpMock = jasmine.createSpyObj('HttpClient', ["post"]) ;
 
-      const srv = new LoginService(httpMock, jwtServiceMock);
+      const srv = new AuthService(httpMock, jwtServiceMock);
 
       const res = srv.isLoggedIn();
 
@@ -78,12 +78,12 @@ describe('Login Service with JwtHelperService spy', () => {
         })
       ],
       providers: [
-        LoginService, 
+        AuthService, 
         JwtHelperService
       ]
     });
     // resolve dependencies using the TestBed injector
-    service = TestBed.inject(LoginService);
+    service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);    
     jwtHelper = TestBed.inject(JwtHelperService);
     // resolve dependencies using the TestBed injector
@@ -103,7 +103,7 @@ describe('Login Service with JwtHelperService spy', () => {
 
   it('isLoggedIn() should return true if there is a token', () => {
     // There is a token
-    localStorage.setItem(storageTokenKey, VALID_TOKEN);
+    localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
 
     // We pretend it's not expired from JwtHelperService external dependency
     const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);

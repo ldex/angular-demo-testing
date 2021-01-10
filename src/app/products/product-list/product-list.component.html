@@ -4,44 +4,46 @@
 
 <h3>{{ message }}</h3>
 
-<div class="right">
-  {{ (products$ | async)?.length }} products listed
-   / 
-  <span>
-    {favourites, plural,
-          =0 {no favourite}
-          =1 {1 favourite}
-          other {{{favourites}} favourites}
-    }
-  </span>
-</div>
-
 <ng-template #loading>
-  <h1>Loading products...</h1>
+  <h1 class="loading">Loading products</h1>
 </ng-template>
 
-<div>
-  <button (click)="sortList('price')">Sort by price</button>
-  <button (click)="sortList('name')" class="sortByName">Sort by name</button>
-  <button (click)="sortList('modifiedDate')">Sort by date</button>
-</div>
+<ng-container *ngIf="(productsNumber$ | async) > 0; else loading">
+  <div class="right">
+    {{ productsNumber$ | async }} products displayed |
+    {{ productsTotalNumber$ | async }} on server | 
+    <span>
+      {favourites, plural,
+            =0 {no favourite}
+            =1 {1 favourite}
+            other {{{favourites}} favourites}
+      }
+    </span>
+  </div>
 
-<ul class="products" *ngIf="products$ | async as products;else loading">
-  <li class="productItem" *ngFor="let product of products | orderBy:[sorter] | slice:start:end" [title]="product | json" (click)="onSelect(product)"
-    [class.discontinued]="product.discontinued" [class.selected]="product === selectedProduct">
-    <span class="name">{{ product.name | uppercase }}</span>
-    <span class="description">{{ product.description }}</span>
-    <span class="price">{{ product.price | currency:'CAD':'symbol-narrow':'.2' }}</span>
-  </li>
-</ul>
+  <div>
+    <button (click)="sortList('price')">Sort by price</button>
+    <button (click)="sortList('name')" class="sortByName">Sort by name</button>
+    <button (click)="sortList('modifiedDate')">Sort by date</button>
+  </div>
 
-<div class="left">
-  <a routerLink="insert">Add new product...</a>
-</div>
+  <ul class="products" *ngIf="products$ | async as products;else loading">
+    <li class="productItem" *ngFor="let product of products | orderBy:[sorter] | slice:start:end" [title]="product | json" (click)="onSelect(product)"
+      [class.discontinued]="product.discontinued" [class.selected]="product === selectedProduct">
+      <span class="name">{{ product.name | uppercase }}</span>
+      <span class="description">{{ product.description }}</span>
+      <span class="price">{{ product.price | currency:'CAD':'symbol-narrow':'.2' }}</span>
+    </li>
+  </ul>
 
-<div class="right">
-  <button (click)="previousPage()" [disabled]="start == 0">Previous Page</button>
-  Page {{ currentPage }}
-  <button (click)="nextPage()" *ngIf="(products$ | async)?.length > end">Next Page</button>
-  <button (click)="loadMore()" *ngIf="(products$ | async)?.length <= end">Load more...</button>
-</div>
+  <div class="left">
+    <a routerLink="insert">Add new product...</a>
+  </div>
+
+  <div class="right">
+    <button (click)="previousPage()" [disabled]="start == 0">Previous Page</button>
+    Page {{ currentPage }}
+    <button (click)="nextPage()" *ngIf="(productsNumber$ | async) > end">Next Page</button>
+    <button (click)="loadMore()" *ngIf="(productsNumber$ | async) <= end">Load {{productsToLoad}} more...</button>
+  </div>
+</ng-container>

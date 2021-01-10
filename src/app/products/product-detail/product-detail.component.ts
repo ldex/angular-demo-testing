@@ -30,9 +30,9 @@ export class ProductDetailComponent implements OnInit {
       this.productService
           .deleteProduct(id)
           .subscribe(
-              response => {
+              () => {
                   console.log('Product deleted.');
-                  this.productService.clearCache();
+                  this.productService.clearList();
                   this.router.navigateByUrl("/products");
               },
               error => console.log('Could not delete product. ' + error),
