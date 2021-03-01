@@ -4,6 +4,7 @@ import { Product } from './../product.interface';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,6 +22,7 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private favouriteService: FavouriteService,
     private productService: ProductService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -39,6 +41,10 @@ export class ProductDetailComponent implements OnInit {
               () => console.log('Delete Product Complete.')
           );
     }
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   addToFavourites(product: Product) {

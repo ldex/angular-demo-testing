@@ -12,6 +12,8 @@
       <button (click)="addToFavourites(product)">
         Add to favourites</button>
 
-        <button (click)="deleteProduct(product.id)">Delete</button>
+        <button (click)="deleteProduct(product.id)"
+                *ngIf="isAuthenticated()"
+                id="deleteButton">Delete</button>
     </p>
 </div>

@@ -23,3 +23,20 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('loginAs', (UserEmail, UserPwd) => {
+  cy.request({
+    method: 'POST',
+    url: "https://demo2584715.mockable.io/api/login",
+    body: {
+      user: {
+        username: UserEmail,
+        password: UserPwd,
+      }
+    }
+  })
+    .its('body')
+    .then((response) => {
+        localStorage.setItem("auth_token", response.token);
+    });
+});

@@ -3,11 +3,12 @@
 describe("Admin", () => {
 
   beforeEach(() => {
-    cy.visit("/admin");
+    cy.visit("/home");
   });
 
-  it("Authenticated users should not access Admin", () => {
+  it("unauthenticated users should not access Admin", () => {
     cy.contains("Admin").click();
     cy.url().should("include", "login");
   });
+  
 });

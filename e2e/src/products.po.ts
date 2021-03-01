@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class ProductListPage {
+export class ProductsPage {
   async navigateTo() {
     return await browser.get('/products');
   }

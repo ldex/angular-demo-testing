@@ -1,11 +1,10 @@
-import { ProductListPage } from './products.po';
-import JasmineExpect from "jasmine-expect";
+import { ProductsPage } from './products.po';
 
 describe('Products', () => {
-  let page: ProductListPage;
+  let page: ProductsPage;
 
   beforeEach(async() => {
-    page = new ProductListPage();
+    page = new ProductsPage();
     await page.navigateTo();
   });
 
@@ -28,6 +27,4 @@ describe('Products', () => {
     const productName = await elem.getText();
     expect(productName.toLowerCase().startsWith("a")).toBe(true);
   });
-
-  //https://github.com/JamieMason/Jasmine-Matchers
 });

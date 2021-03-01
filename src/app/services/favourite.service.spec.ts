@@ -10,6 +10,10 @@ describe('Favourite Service', () => {
         expect(service.favourites.size).toBe(0);
     });
 
+    it('should have custom', () => {
+        expect("test").toStartWith("to");
+    });
+
     it('should have 1 favourite', () => {
         let p = {
             name: 'Trek SSL 2015',

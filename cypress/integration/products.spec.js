@@ -1,11 +1,7 @@
 /// <reference types="Cypress" />
 
-import Chance from "chance";
-const chance = new Chance();
 
 describe("Products", () => {
-  const email = chance.email();
-
   beforeEach(() => {
     cy.visit("/products");
   });
@@ -29,6 +25,17 @@ describe("Products", () => {
     cy.get('#sortByName').click();
     cy.get('.name')
       .first()
-      .should('have.text', 'BOOK');
+      .should('have.text', 'AAAAAAAAAAAAA');
+  });
+
+  it("unauthenticated users should not be able to visit the new product form", () => {
+    cy.get("#addLink").click();
+    cy.url().should("include", "login");
+  });
+
+  it("authenticated users should be able to visit the new product form", () => {
+    cy.loginAs("foo@foo.com", "fooPassword");
+    cy.get("#addLink").click();
+    cy.url().should("include", "insert");
   });
 });

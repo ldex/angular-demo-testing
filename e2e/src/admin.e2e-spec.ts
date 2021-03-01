@@ -1,13 +1,15 @@
-import { browser, by, element } from 'protractor';
+import { AdminPage } from './admin.po';
 
 describe('Admin', () => {
+  let page: AdminPage;
 
   beforeEach(async() => {
-    await browser.get('/admin');
+    page = new AdminPage();
+    await page.navigateTo();
   });
 
-  it('Authenticated users should not access Admin', async() => {
-    const title = element(by.css('app-root h2')).getText();
-    expect(title).toBe("Login");
+  it('Unauthenticated users should not access Admin', async() => {
+    page.getAdminMenuElement().click();
+    expect(page.getTitle()).toEqual('Login');
   });
 });
