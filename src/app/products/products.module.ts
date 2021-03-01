@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductInsertComponent } from './product-insert/product-insert.component';
+import { DefaultPipe } from './default.pipe';
 
 @NgModule({
     imports: [
@@ -20,8 +21,9 @@ import { ProductInsertComponent } from './product-insert/product-insert.componen
     declarations: [
         ProductDetailComponent,
         ProductListComponent,
+        ProductInsertComponent,
         OrderBy,
-        ProductInsertComponent
+        DefaultPipe
     ],
     providers: [ProductService, FavouriteService],
 })

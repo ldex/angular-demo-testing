@@ -29,7 +29,7 @@ export class ProductService {
     }
 
     deleteProduct(id: number): Observable<any> {
-        return this.http.delete(`${this.baseUrl}/${id}`);           
+        return this.http.delete(`${this.baseUrl}/${id}`);
     }
 
     insertProduct(newProduct: Product): Observable<Product> {
@@ -51,13 +51,13 @@ export class ProductService {
             .pipe(
                 shareReplay()
             );
-    }      
+    }
 
     loadProducts(skip: number = 0, take: number = 10): void {
         let url = `${this.baseUrl}?$skip=${skip}&$top=${take}&$orderby=ModifiedDate%20desc`;
-    
+
         if (skip == 0 && this.products.value.length > 0) return;
-    
+
         this.http
           .get<Product[]>(url)
           .pipe(
@@ -73,8 +73,7 @@ export class ProductService {
 
     clearList() {
         this.products.next([]);
-        this.loadProducts();    
-        this.initProductsTotalNumber();
+        this.loadProducts();
     }
 
     private handleError(errorResponse: HttpErrorResponse) {
