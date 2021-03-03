@@ -19,6 +19,7 @@ export class ProductInsertComponent implements OnInit {
   name: FormControl;
   price: FormControl;
   description: FormControl;
+  imageUrl: FormControl;
 
   constructor(
     private fb: FormBuilder,
@@ -43,20 +44,22 @@ export class ProductInsertComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.name = new FormControl('', [Validators.required]);
-    this.price = new FormControl('', [Validators.required]);
-    this.description = new FormControl('',
-      [Validators.minLength(3),
-      Validators.maxLength(50)]);
+    let validImgUrlRegex: string = '^(https?\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,5}(?:\/\S*)?(?:[-A-Za-z0-9+&@#/%?=~_|!:,.;])+\.(?:jpg|jpeg|gif|png))$';
+
+    this.name = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+    this.price = new FormControl('', [Validators.required, Validators.min(0), Validators.max(10000000)]);
+    this.description = new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
+    this.imageUrl = new FormControl('', [Validators.pattern(validImgUrlRegex)]);
+
     this.insertForm = this.fb.group(
-      {
-        'name': this.name,
-        'price': this.price,
-        'description': this.description,
-        'discontinued': false,
-        'fixedPrice': false,
-        'imageUrl': ''
-      }
+        {
+            'name': this.name,
+            'price': this.price,
+            'description': this.description,
+            'imageUrl': this.imageUrl,
+            'discontinued': false,
+            'fixedPrice': false
+        }
     );
   }
 

@@ -6,8 +6,12 @@ export class LoginPage {
     return await browser.get('/login');
   }
 
-  removeAuthTokens() {
+  removeAuthToken() {
     browser.executeScript("window.localStorage.clear();");
+  }
+
+  getAuthToken() {
+    browser.executeScript("window.localStorage.getItem('auth_token');");
   }
 
   getTitle() {

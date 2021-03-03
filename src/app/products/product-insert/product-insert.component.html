@@ -3,58 +3,66 @@
       (ngSubmit)="onSubmit()">
     <label for="name">Name:</label>
     <input
-        id="name" 
+        id="name"
         type="text"
         formControlName="name">
-    <div *ngIf="name.touched && name.errors" class="errorMessage">
-        <span *ngIf="name.errors.required">Name is required</span>
-    </div>
-    <br />
-    
-    <label for="price">Price:</label>
-    <input
-        id="price"
-        type="number"
-	    step="0.01"
-        formControlName="price">
-    <div *ngIf="price.touched && price.errors" class="errorMessage">
-        <span *ngIf="price.errors.required">Price is required</span>
-    </div>
-    <br />
-    
-    <label for="description">Description:</label>
-    <textarea
-        id="description"
-        formControlName="description">
-    </textarea>
-    <div *ngIf="description.touched && description.errors" class="errorMessage">
-        <span *ngIf="description.errors.required">Description is required</span>
-        <span *ngIf="description.errors.minlength">Min 3 chars</span>
-        <span *ngIf="description.errors.maxlength">Max 50 chars</span>
-     </div>
+    <div *ngIf="name.touched && name.errors"
+        class="errorMessage">
+       <span *ngIf="name.hasError('required')">Name is required.</span>
+       <span *ngIf="name.hasError('maxlength')">Only 50 characters allowed for Name.</span>
+   </div>
     <br />
 
-    <label for="imageUrl">Image path:</label>
-    <input
-        id="imageUrl"
-        type="text"  
-        formControlName="imageUrl">
+    <label for="price">Price:</label>
+    <input id="price"
+           type="number"
+           step="0.5"
+           formControlName="price">
+    <div *ngIf="price.touched && price.errors"
+         class="errorMessage">
+        <span *ngIf="price.hasError('required')">Price is required.</span>
+        <span *ngIf="price.hasError('min')">Negative price not allowed.</span>
+        <span *ngIf="price.hasError('max')">Max price allowed is 10 000 000.</span>
+    </div>
+    <br />
+
+    <label for="description">Description:</label>
+    <textarea id="description"
+              formControlName="description">
+    </textarea>
+    <div *ngIf="description.touched && description.errors"
+         class="errorMessage">
+        <span *ngIf="description.hasError('required')">Description is required.</span>
+        <span *ngIf="description.hasError('minlength')">Min 5 characters</span>
+        <span *ngIf="description.hasError('maxlength')">Max 500 characters</span>
+    </div>
+    <br />
+
+    <label for="imageUrl">Image url:</label>
+    <input id="imageUrl"
+           type="text"
+           placeholder="http://"
+           formControlName="imageUrl">
+    <div *ngIf="imageUrl.touched && imageUrl.errors"
+         class="errorMessage">
+        <span *ngIf="imageUrl.hasError('pattern')">Invalid image url.</span>
+    </div>
     <br />
 
     <label for="discontinued">Discontinued?</label>
     <input
         id="discontinued"
-        type="checkbox"  
+        type="checkbox"
         formControlName="discontinued">
     <br />
 
     <label for="fixedPrice">Fixed price?</label>
     <input
         id="fixedPrice"
-        type="checkbox"  
+        type="checkbox"
         formControlName="fixedPrice">
     <br />
-    
+
     <button type="submit"
         [disabled]="insertForm.invalid">Save</button>
 </form>

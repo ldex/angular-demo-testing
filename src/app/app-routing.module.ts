@@ -8,7 +8,7 @@ import { AdminComponent } from './common/admin.component';
 import { ContactComponent } from './common/contact.component';
 import { HomeComponent } from './common/home.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo:'/home', pathMatch:'full' },
   { path: 'home', component: HomeComponent },
   { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule)},

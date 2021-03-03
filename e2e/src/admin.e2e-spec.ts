@@ -8,7 +8,7 @@ describe('Admin', () => {
     await page.navigateTo();
   });
 
-  it('Unauthenticated users should not access Admin', async() => {
+  it('unauthenticated users should not access Admin', async() => {
     page.getAdminMenuElement().click();
     expect(page.getTitle()).toEqual('Login');
   });

@@ -12,13 +12,13 @@ export class LoginComponent {
     error: string = '';
 
     constructor(
-        private loginService: AuthService,
+        private authService: AuthService,
         private router: Router
     ) { }
 
     loginUser(form: NgForm) {
         if (form.valid) {
-            this.loginService
+            this.authService
                 .login(form.value.username, form.value.password)
                 .subscribe(
                     result => {

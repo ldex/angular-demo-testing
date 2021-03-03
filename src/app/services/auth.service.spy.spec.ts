@@ -78,13 +78,13 @@ describe('Login Service with JwtHelperService spy', () => {
         })
       ],
       providers: [
-        AuthService, 
+        AuthService,
         JwtHelperService
       ]
     });
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController);    
+    httpMock = TestBed.inject(HttpTestingController);
     jwtHelper = TestBed.inject(JwtHelperService);
     // resolve dependencies using the TestBed injector
    // service = TestBed.inject(LoginService);
@@ -116,7 +116,7 @@ describe('Login Service with JwtHelperService spy', () => {
   });
 
   it('isLoggedIn() should return false if there is no token', () => {
-    // No token  
+    // No token
 
     // Spy for external dependency but should not be called anyway
     const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);

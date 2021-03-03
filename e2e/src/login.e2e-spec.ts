@@ -6,17 +6,17 @@ describe('Login', () => {
   let page: LoginPage;
   const Chance = require('chance');
   const chance = new Chance();
-  
+
   beforeEach(async() => {
     page = new LoginPage();
     await page.navigateTo();
   });
-  
+
   afterEach(function() {
-    page.removeAuthTokens();
+    page.removeAuthToken();
   });
 
-  it('Should authenticate a user with username and password', async() => {
+  it('should authenticate a user with username and password', async() => {
     const userNameField = page.getUserNameElement();
     const passwordField = page.getPasswordElement();
     const submitButton =  page.getSubmitButtonElement();
@@ -26,6 +26,7 @@ describe('Login', () => {
     submitButton.click();
 
     expect(page.getTitle()).toEqual('Admin');
+    expect(page.getAuthToken()).not.toBeNull();
   });
 
 });
