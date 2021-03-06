@@ -37,6 +37,7 @@ export class LoginComponent {
     }
 
     @ViewChild('username') myInput: ElementRef;
+    @ViewChild('loginForm') loginForm: NgForm;
 
     setFocus() {
         this.myInput.nativeElement.focus();

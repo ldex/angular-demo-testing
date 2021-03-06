@@ -32,14 +32,14 @@ export class ProductInsertComponent implements OnInit {
     this.productService
       .insertProduct(newProduct)
       .subscribe(
-      product => {
-        console.log('New Product Posted.');
-        console.log(product);
-        this.productService.clearList();
-        this.router.navigateByUrl("/products");
-      },
-      error => console.log('Could not post product. ' + error),
-      () => console.log('New Product Post Complete.')
+        product => {
+          console.log('New Product Posted.');
+          console.log(product);
+          this.productService.clearList();
+          this.router.navigateByUrl("/products");
+        },
+        error => console.log('Could not post product. ' + error),
+        () => console.log('New Product Post Complete.')
       );
   }
 

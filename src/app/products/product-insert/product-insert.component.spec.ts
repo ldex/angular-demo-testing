@@ -1,19 +1,34 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { ProductService } from 'src/app/services/product.service';
+import { Product } from '../product.interface';
 import { ProductInsertComponent } from "./product-insert.component";
+import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
+import { Router } from '@angular/router';
 
-describe('Product Insert Component', () => {
+// Declare a mock for the Router service
+class RouterMock {
+    navigateByUrl() : void {}
+}
 
+describe('Product Insert Component (Reactive Form)', () => {
     let component: ProductInsertComponent;
     let fixture: ComponentFixture<ProductInsertComponent>;
+    let productServiceSpy: Spy<ProductService>;
 
     beforeEach(() => {
-
         // refine the test module by declaring the test component
         TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, FormsModule],
-            declarations: [ProductInsertComponent]
+            declarations: [ProductInsertComponent],
+            providers: [
+                { provide: ProductService, useValue: createSpyFromClass(ProductService) },
+                { provide: Router, useClass: RouterMock }
+            ]
         });
+
+        // Spy for the Product Service
+        productServiceSpy = TestBed.inject<any>(ProductService);
 
         // create component and test fixture
         fixture = TestBed.createComponent(ProductInsertComponent);
@@ -21,10 +36,6 @@ describe('Product Insert Component', () => {
         // get test component from the fixture
         component = fixture.componentInstance;
         component.ngOnInit();
-    });
-
-    it('form invalid when empty', () => {
-        expect(component.insertForm.valid).toBeFalsy();
     });
 
     it('name field validity', () => {
@@ -36,15 +47,17 @@ describe('Product Insert Component', () => {
         errors = name.errors || {};
         expect(errors['required']).toBeTruthy();
 
-        // Set name to something incorrect
-        name.setValue("foo");
+        // Set name to something incorrect (too long)
+        name.setValue("this product name is far too long so it should be invalid.");
         errors = name.errors || {};
         expect(errors['required']).toBeFalsy();
+        expect(errors['maxlength']).toBeTruthy();
 
-        // Set email to something correct
-        name.setValue("test@example.com");
+        // Set name to something correct
+        name.setValue("this is fine");
         errors = name.errors || {};
         expect(errors['required']).toBeFalsy();
+        expect(errors['maxlength']).toBeFalsy();
     });
 
     it('price field validity', () => {
@@ -55,34 +68,55 @@ describe('Product Insert Component', () => {
         errors = price.errors || {};
         expect(errors['required']).toBeTruthy();
 
-        // Set email to something
+        // Set price to something invalid (negative)
+        price.setValue("-10");
+        errors = price.errors || {};
+        expect(errors['required']).toBeFalsy();
+        expect(errors['min']).toBeTruthy();
+        expect(errors['max']).toBeFalsy();
+
+        // Set price to something invalid (too expensive)
         price.setValue("123454546456456456");
         errors = price.errors || {};
         expect(errors['required']).toBeFalsy();
-        expect(errors['minlength']).toBeTruthy();
+        expect(errors['min']).toBeFalsy();
+        expect(errors['max']).toBeTruthy();
 
-        // Set email to something correct
-        price.setValue("123456789");
+        // Set price to something correct
+        price.setValue("789");
         errors = price.errors || {};
         expect(errors['required']).toBeFalsy();
         expect(errors['minlength']).toBeFalsy();
+        expect(errors['max']).toBeFalsy();
     });
 
-    it('submitting a form emits a product', () => {
+    it('form is invalid when empty', () => {
         expect(component.insertForm.valid).toBeFalsy();
-        component.insertForm.controls['email'].setValue("test@test.com");
-        component.insertForm.controls['password'].setValue("123456789");
+    });
+
+    it('form validity', () => {
+
+        let newProduct: Product = {
+            name: "product test",
+            price: 999,
+            description: "this is the product description.",
+            discontinued: false,
+            fixedPrice: false,
+            imageUrl: '',
+            modifiedDate: new Date(2021, 3, 3)
+        }
+
+        expect(component.insertForm.valid).toBeFalsy();
+        component.insertForm.controls['name'].setValue(newProduct.name);
+        component.insertForm.controls['price'].setValue(newProduct.price);
+        component.insertForm.controls['description'].setValue(newProduct.description);
         expect(component.insertForm.valid).toBeTruthy();
+      
+        productServiceSpy.insertProduct.and.nextOneTimeWith(newProduct);
 
-        // let user: User;
-        // // Subscribe to the Observable and store the user in a local variable.
-        // component.loggedIn.subscribe((value) => user = value);
+        // Trigger the submit function
+        component.onSubmit();
 
-        // // Trigger the login function
-        // component.login();
-
-        // Now we can check to make sure the emitted value is correct
-        // expect(user.email).toBe("test@test.com");
-        // expect(user.password).toBe("123456789");
+        expect(productServiceSpy.insertProduct).toHaveBeenCalled();
     });
 });

@@ -5,7 +5,6 @@ import JasmineExpect from "jasmine-expect";
 import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
 
 import { AdminComponent } from './admin.component';
-import { stringify } from '@angular/compiler/src/util';
 
 describe('AdminComponent', () => {
   let component: AdminComponent;
@@ -15,9 +14,8 @@ describe('AdminComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AdminComponent],
-      providers: [{ provide: AdminService, useValue: createSpyFromClass(AdminService) },]
+      providers: [{ provide: AdminService, useValue: createSpyFromClass(AdminService) }]
     })
-    .compileComponents();
 
     adminServiceSpy = TestBed.inject<any>(AdminService);
   });
@@ -41,5 +39,6 @@ describe('AdminComponent', () => {
     adminServiceSpy.getProfile.and.nextOneTimeWith(result);
     component.getProfile();
     expect(component.profile).toBe(result);
+    expect(adminServiceSpy.getProfile).toHaveBeenCalled();
   });
 });
