@@ -1,5 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
@@ -19,22 +19,17 @@ describe('Auth Service mocking Http', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        JwtModule.forRoot({
-          config: {
-            tokenGetter: GetToken,
-            whitelistedDomains: ['localhost:4200', 'localhost:9876', 'storerestservice.azurewebsites.net']
-          }
-        })
+        JwtModule.forRoot({ config: {tokenGetter: GetToken} })
       ],
       providers: [
-        AuthService, 
+        AuthService,
         JwtHelperService
       ]
     });
 
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController);    
+    httpMock = TestBed.inject(HttpTestingController);
     jwtHelper = TestBed.inject(JwtHelperService);
   });
 
@@ -46,7 +41,7 @@ describe('Auth Service mocking Http', () => {
 
 
   ///////////////////////////////////////////////////////////
-  
+
   it('should return true from getToken when there is a token', () => {
     localStorage.setItem(storageTokenKey, '1234');
     expect(service.getToken()).toBeTruthy();
@@ -56,36 +51,31 @@ describe('Auth Service mocking Http', () => {
     expect(service.getToken()).toBeFalsy();
   });
 
-  it('should login with admin', done => {
+  it('should login with admin', fakeAsync(() => {
+    let result;
 
     service
       .login("admin", "admin")
-      .subscribe(
-        result => {
-          expect(result).toBeTruthy();
-          done();
-        }
-      ); 
+      .subscribe(response => result = response);
 
       const req = httpMock.expectOne(baseUrl);
       expect(req.request.method).toBe("POST");
       req.flush({token: '123'});
-  });
 
-  it('should not login with user', done => {
+      expect(result).toBeTruthy();
+  }));
+
+  it('should not login with user', fakeAsync(() => {
+    let result;
 
     service
     .login("user", "user")
-    .subscribe(
-      result => {
-        expect(result).toBeFalsy();
-        done();
-      }
-    );  
+    .subscribe(response => result = response);
 
     const req = httpMock.expectOne(baseUrl);
     expect(req.request.method).toBe("POST");
     req.flush({error: 'Invalid!'});
 
-  });
+    expect(result).toBeFalsy();
+  }));
 });

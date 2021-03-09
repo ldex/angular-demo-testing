@@ -6,7 +6,7 @@ import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
 
 import { AdminComponent } from './admin.component';
 
-describe('AdminComponent', () => {
+describe('Admin Component', () => {
   let component: AdminComponent;
   let fixture: ComponentFixture<AdminComponent>;
   let adminServiceSpy: Spy<AdminService>;
@@ -26,7 +26,7 @@ describe('AdminComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create an instance', () => {
     expect(component).toBeTruthy();
   });
 

@@ -5,6 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from 'src/app/services/auth.service';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -13,7 +14,6 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ProductDetailComponent implements OnInit {
 
-  @Input() product: Product;
   product$: Observable<Product>;
   productSub: Subscription;
 
@@ -23,24 +23,47 @@ export class ProductDetailComponent implements OnInit {
     private favouriteService: FavouriteService,
     private productService: ProductService,
     private authService: AuthService,
+    private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
+  // deleteProductNotTestable(id: number) {
+  //   if (window.confirm('Are you sure to delete this product ?')) {
+  //     this.productService
+  //         .deleteProduct(id)
+  //         .subscribe(
+  //             () => {
+  //                 console.log('Product deleted.');
+  //                 this.productService.clearList();
+  //                 this.router.navigateByUrl("/products");
+  //             },
+  //             error => console.log('Could not delete product. ' + error),
+  //             () => console.log('Delete Product Complete.')
+  //         );
+  //   }
+  // }
+
   deleteProduct(id: number) {
-    if (window.confirm('Are you sure to delete this product ?')) {
-      this.productService
-          .deleteProduct(id)
-          .subscribe(
-              () => {
-                  console.log('Product deleted.');
-                  this.productService.clearList();
-                  this.router.navigateByUrl("/products");
-              },
-              error => console.log('Could not delete product. ' + error),
-              () => console.log('Delete Product Complete.')
-          );
-    }
+    this
+      .dialogService
+      .confirm('Are you sure to delete this product ?')
+      .then(isConfirmed => {
+          if (isConfirmed) {
+            this.productService
+                .deleteProduct(id)
+                .subscribe(
+                    () => {
+                        console.log('Product deleted.');
+                        this.productService.clearList();
+                        this.router.navigateByUrl("/products");
+                    },
+                    error => console.log('Could not delete product. ' + error),
+                    () => console.log('Delete Product Complete.')
+                );
+          }
+        }
+      )
   }
 
   isAuthenticated(): boolean {
