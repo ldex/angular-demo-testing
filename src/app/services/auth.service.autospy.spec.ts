@@ -28,7 +28,6 @@ describe('Auth Service with JwtHelperService auto spy', () => {
   });
 
   afterEach(() => {
-    service = null;
     localStorage.removeItem(storageTokenKey);
   });
 
@@ -37,8 +36,8 @@ describe('Auth Service with JwtHelperService auto spy', () => {
   // TESTS
   ///////////////////////////////////////////////////////////
 
-  it('isLoggedIn() should return true if there is a token', () => {
-    // There is a token
+  it('isLoggedIn() should return true if there is an auth token', () => {
+    // There is a token in local storage
     localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
 
     jwtHelperServiceSpy.isTokenExpired.and.returnValue(false);
@@ -49,8 +48,8 @@ describe('Auth Service with JwtHelperService auto spy', () => {
      expect(jwtHelperServiceSpy.isTokenExpired).toHaveBeenCalled();
   });
 
-  it('isLoggedIn() should return false if there is no token', () => {
-    // No token
+  it('isLoggedIn() should return false if there is no auth token', () => {
+    // No token in local storage
 
     jwtHelperServiceSpy.isTokenExpired.and.returnValue(false);
 

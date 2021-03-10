@@ -3,11 +3,6 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
 
-import { LoginComponent } from './common/login.component';
-import { AdminComponent } from './common/admin.component';
-import { ContactComponent } from './common/contact.component';
-import { HomeComponent } from './common/home.component';
-import { AppComponent } from "./app.component";
 import { routes } from "./app-routing.module";
 import { AuthService } from "./services/auth.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -24,18 +19,12 @@ describe('App Routing', () => {
 
   let location: Location;
   let router: Router;
-  let fixture;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule.withRoutes(routes)],
-      declarations: [
-        // HomeComponent,
-        // ContactComponent,
-        // AdminComponent,
-        // LoginComponent
+        RouterTestingModule.withRoutes(routes)
       ],
       providers: [
         AuthService,
@@ -47,7 +36,6 @@ describe('App Routing', () => {
     router = TestBed.inject(Router);
     location = TestBed.inject(Location);
 
-    fixture = TestBed.createComponent(AppComponent);
     router.initialNavigation();
   });
 

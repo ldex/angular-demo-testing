@@ -1,4 +1,4 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
@@ -9,7 +9,8 @@ import { GetToken } from './utils';
 
 // Tests in the context of the Angular Framework with a TestBed
 describe('Auth Service with JwtHelperService spy', () => {
-  let service;
+  let service: AuthService;
+  let jwtHelperService: JwtHelperService;
   const storageTokenKey: string = TOKENKEY;
 
   beforeEach(() => {
@@ -26,11 +27,11 @@ describe('Auth Service with JwtHelperService spy', () => {
       ]
     });
     service = TestBed.inject(AuthService);
+    jwtHelperService = TestBed.inject(JwtHelperService);
   });
 
   afterEach(() => {
-    service = null;
-    localStorage.removeItem(storageTokenKey);
+    localStorage.removeItem(storageTokenKey); // clear local storage after each test
   });
 
 
@@ -38,32 +39,28 @@ describe('Auth Service with JwtHelperService spy', () => {
   // TESTS
   ///////////////////////////////////////////////////////////
 
-  it('isLoggedIn() should return true if there is a token', () => {
-    // There is a token
+  it('isLoggedIn() should return true if there is an auth token', () => {
+    // There is a token in local storage
     localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
 
-    // We pretend it's not expired from JwtHelperService external dependency
-    const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);
-    const stubValue = false;
-    spy.isTokenExpired.and.returnValue(stubValue);
+    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
 
     const res = service.isLoggedIn();
 
      expect(res).toBeTruthy();
+     expect(jwtHelperService.isTokenExpired).toHaveBeenCalled();
   });
 
-  it('isLoggedIn() should return false if there is no token', () => {
-    // No token
+  it('isLoggedIn() should return false if there is no auth token', () => {
+    // No token in local storage
 
     // Spy for external dependency but should not be called anyway
-    const spy = jasmine.createSpyObj('JwtHelperService', ['isTokenExpired']);
-    const stubValue = false;
-    spy.isTokenExpired.and.returnValue(stubValue);
+    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
 
     let res = service.isLoggedIn();
 
      expect(res).toBeFalsy();
-     expect(spy.isTokenExpired).not.toHaveBeenCalled();
+     expect(jwtHelperService.isTokenExpired).not.toHaveBeenCalled();
   });
 
 });

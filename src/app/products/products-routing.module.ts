@@ -6,7 +6,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { ProductListComponent } from './product-list/product-list.component';
 import { LoginRouteGuard } from '../services/login-route-guard.service';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: ProductListComponent },
   { path: 'insert', component: ProductInsertComponent, canActivate: [LoginRouteGuard] },
   { path: ':id', component: ProductDetailComponent }

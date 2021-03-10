@@ -35,6 +35,8 @@ describe('Product Insert Component (Reactive Form)', () => {
 
         // get test component from the fixture
         component = fixture.componentInstance;
+
+        // manually trigger the ngOnInit lifecycle function
         component.ngOnInit();
     });
 
@@ -111,7 +113,7 @@ describe('Product Insert Component (Reactive Form)', () => {
         component.insertForm.controls['price'].setValue(newProduct.price);
         component.insertForm.controls['description'].setValue(newProduct.description);
         expect(component.insertForm.valid).toBeTruthy();
-      
+
         productServiceSpy.insertProduct.and.nextOneTimeWith(newProduct);
 
         // Trigger the submit function
