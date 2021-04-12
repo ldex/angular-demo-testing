@@ -24,20 +24,15 @@ describe('Auth Service with JwtHelperService mock', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        JwtModule.forRoot({
-          config: {
-            tokenGetter: GetToken,
-            whitelistedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net']
-          }
-        })
+        JwtModule.forRoot({ config: {tokenGetter: GetToken} })
       ],
       providers: [
-        AuthService, 
+        AuthService,
         {provide: JwtHelperService, useClass: JwtHelperServiceMock}] // Swap the real JwtHelper service with our mock
     });
 
     // resolve dependencies using the TestBed injector
-    service = TestBed.inject(AuthService);    
+    service = TestBed.inject(AuthService);
     jwtHelper = TestBed.inject(JwtHelperService);
   });
 
@@ -53,15 +48,15 @@ describe('Auth Service with JwtHelperService mock', () => {
 
   it('isLoggedIn() should return true if there is a token', () => {
     // There is a token
-    localStorage.setItem(storageTokenKey, '1234'); 
+    localStorage.setItem(storageTokenKey, '1234');
 
     let res = service.isLoggedIn();
     expect(res).toBeTruthy();
   });
-  
+
   it('isLoggedIn() should return false if there is no token', () => {
     // no token
-    
+
     let res = service.isLoggedIn();
     expect(res).toBeFalsy();
   });
