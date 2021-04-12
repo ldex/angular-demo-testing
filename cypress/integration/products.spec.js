@@ -3,6 +3,7 @@
 
 describe("Products", () => {
   beforeEach(() => {
+    cy.intercept("GET", "/api/*", { fixture: "products.json" }) // Stub GET requests with fixture
     cy.visit("/products");
   });
 
@@ -25,7 +26,7 @@ describe("Products", () => {
     cy.get('#sortByName').click();
     cy.get('.name')
       .first()
-      .should('have.text', 'CATS');
+      .should('have.text', 'CITY XT 2015');
   });
 
   it("unauthenticated users should not be able to visit the new product form", () => {
