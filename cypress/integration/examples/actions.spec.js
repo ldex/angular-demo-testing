@@ -33,13 +33,6 @@ context('Actions', () => {
       .should('have.value', 'disabled error checking')
   })
 
-  it('.focus() - focus on a DOM element', () => {
-    // https://on.cypress.io/focus
-    cy.get('.action-focus').focus()
-      .should('have.class', 'focus')
-      .prev().should('have.attr', 'style', 'color: orange;')
-  })
-
   it('.blur() - blur off a DOM element', () => {
     // https://on.cypress.io/blur
     cy.get('.action-blur').type('About to blur').blur()
@@ -109,15 +102,6 @@ context('Actions', () => {
 
     // Ignore error checking prior to clicking
     cy.get('.action-opacity>.btn').click({ force: true })
-  })
-
-  it('.dblclick() - double click on a DOM element', () => {
-    // https://on.cypress.io/dblclick
-
-    // Our app has a listener on 'dblclick' event in our 'scripts.js'
-    // that hides the div and shows an input on double click
-    cy.get('.action-div').dblclick().should('not.be.visible')
-    cy.get('.action-input-hidden').should('be.visible')
   })
 
   it('.check() - check a checkbox or radio element', () => {
@@ -216,21 +200,6 @@ context('Actions', () => {
       .should('be.visible')
   })
 
-  it('.trigger() - trigger an event on a DOM element', () => {
-    // https://on.cypress.io/trigger
-
-    // To interact with a range input (slider)
-    // we need to set its value & trigger the
-    // event to signal it changed
-
-    // Here, we invoke jQuery's val() method to set
-    // the value and trigger the 'change' event
-    cy.get('.trigger-input-range')
-      .invoke('val', 25)
-      .trigger('change')
-      .get('input[type=range]').siblings('p')
-      .should('have.text', '25')
-  })
 
   it('cy.scrollTo() - scroll the window or element to a position', () => {
 

@@ -29,8 +29,6 @@ context('Network Requests', () => {
       expect(server.enable).to.be.true
       // forces requests that don't match your routes to 404
       expect(server.force404).to.be.false
-      // whitelists requests from ever being logged or stubbed
-      expect(server.whitelist).to.be.a('function')
     })
 
     cy.server({
@@ -166,29 +164,5 @@ context('Network Requests', () => {
     cy.get('.network-post').click()
     cy.wait('@postComment')
 
-    // get the route
-    cy.get('@postComment').should((xhr) => {
-      expect(xhr.requestBody).to.include('email')
-      expect(xhr.requestHeaders).to.have.property('Content-Type')
-      expect(xhr.responseBody).to.have.property('name', 'Using POST in cy.route()')
-    })
-
-    // Stub a response to PUT comments/ ****
-    cy.route({
-      method: 'PUT',
-      url: 'comments/*',
-      status: 404,
-      response: { error: message },
-      delay: 500,
-    }).as('putComment')
-
-    // we have code that puts a comment when
-    // the button is clicked in scripts.js
-    cy.get('.network-put').click()
-
-    cy.wait('@putComment')
-
-    // our 404 statusCode logic in scripts.js executed
-    cy.get('.network-put-comment').should('contain', message)
   })
 })

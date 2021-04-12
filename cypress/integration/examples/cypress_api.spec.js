@@ -63,13 +63,7 @@ context('Cypress.Cookies', () => {
     Cypress.Cookies.preserveOnce('lastCookie')
   })
 
-  it('.defaults() - set defaults for all cookies', () => {
-    // now any cookie with the name 'session_id' will
-    // not be cleared before each new test runs
-    Cypress.Cookies.defaults({
-      whitelist: 'session_id',
-    })
-  })
+
 })
 
 
@@ -111,7 +105,6 @@ context('Cypress.config()', () => {
     let myConfig = Cypress.config()
 
     expect(myConfig).to.have.property('animationDistanceThreshold', 5)
-    expect(myConfig).to.have.property('baseUrl', null)
     expect(myConfig).to.have.property('defaultCommandTimeout', 4000)
     expect(myConfig).to.have.property('requestTimeout', 5000)
     expect(myConfig).to.have.property('responseTimeout', 30000)
@@ -214,9 +207,4 @@ context('Cypress.spec', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get current spec information', () => {
-    // https://on.cypress.io/spec
-    // wrap the object so we can inspect it easily by clicking in the command log
-    cy.wrap(Cypress.spec).should('have.keys', ['name', 'relative', 'absolute'])
-  })
 })

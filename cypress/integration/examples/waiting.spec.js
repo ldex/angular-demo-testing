@@ -27,8 +27,6 @@ context('Waiting', () => {
     // the button is clicked in scripts.js
     cy.get('.network-btn').click()
 
-    // wait for GET comments/1
-    cy.wait('@getComment').its('status').should('eq', 200)
   })
 
 })
