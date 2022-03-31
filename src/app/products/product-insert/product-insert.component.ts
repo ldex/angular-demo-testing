@@ -24,7 +24,8 @@ export class ProductInsertComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private router: Router) { }
+    private router: Router) {
+    }
 
   onSubmit() {
     let newProduct = this.insertForm.value;

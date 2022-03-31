@@ -11,16 +11,17 @@ describe('Auth Service with JwtHelperService auto spy', () => {
   let service;
   let jwtHelperServiceSpy: Spy<JwtHelperService>;
   const storageTokenKey: string = TOKENKEY;
+  const authToken: string = FAKE_VALID_AUTH_TOKEN;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        JwtModule.forRoot({ config: {tokenGetter: GetToken} })
+        JwtModule
       ],
       providers: [
         AuthService,
-        provideAutoSpy(JwtHelperService)
+        provideAutoSpy(JwtHelperService) // same as {provide: JwtHelperService, useClass: createSpyFromClass(JwtHelperService)}
       ]
     });
     service = TestBed.inject(AuthService);
@@ -36,9 +37,9 @@ describe('Auth Service with JwtHelperService auto spy', () => {
   // TESTS
   ///////////////////////////////////////////////////////////
 
-  it('isLoggedIn() should return true if there is an auth token', () => {
-    // There is a token in local storage
-    localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
+  it('isLoggedIn() should return true if there is an authentication token', () => {
+    // There is an authentication token in local storage
+    localStorage.setItem(storageTokenKey, authToken);
 
     jwtHelperServiceSpy.isTokenExpired.and.returnValue(false);
 
@@ -48,8 +49,8 @@ describe('Auth Service with JwtHelperService auto spy', () => {
      expect(jwtHelperServiceSpy.isTokenExpired).toHaveBeenCalled();
   });
 
-  it('isLoggedIn() should return false if there is no auth token', () => {
-    // No token in local storage
+  it('isLoggedIn() should return false if there is no authentication token', () => {
+    // No authentication token in local storage
 
     jwtHelperServiceSpy.isTokenExpired.and.returnValue(false);
 

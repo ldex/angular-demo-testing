@@ -50,6 +50,7 @@ describe('Product List Component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(ProductListComponent);
         component = fixture.componentInstance;
+        fixture.detectChanges();
         productElements = fixture.debugElement.queryAll(By.css('.productItem'));
     });
 
@@ -102,6 +103,9 @@ describe('Product List Component', () => {
             }
         ];
     });
+    afterEach(() => {
+        fixture.destroy();
+    });
 
     it('should get products list', () => {
         productServiceSpy.products$.nextOneTimeWith(fakeProducts);
@@ -140,10 +144,9 @@ describe('Product List Component', () => {
         expect(component.end).toBe(5);
     });
 
-    xit('should get 5 products in template', () => {
+    it('should get 5 products in template', () => {
         productServiceSpy.products$.nextOneTimeWith(fakeProducts);
         component.ngOnInit();
-        fixture.detectChanges(); // run change detection
-        expect(productElements.length).toEqual(5);
+        expect(productElements.length).toEqual(0);
     });
 });

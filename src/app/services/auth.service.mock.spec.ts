@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
-import { TOKENKEY } from './const';
+import { TOKENKEY, FAKE_VALID_AUTH_TOKEN } from './const';
 import { GetToken } from './utils';
 
-// Declare a mock for the JwtHelper external service
+// Declare a fake class for the JwtHelper external service
 class JwtHelperServiceMock {
   isTokenExpired() : boolean {
       return false;
@@ -17,6 +17,7 @@ class JwtHelperServiceMock {
 describe('Auth Service with JwtHelperService mock', () => {
   let service, jwtHelper;
   const storageTokenKey: string = TOKENKEY;
+  const authToken: string = FAKE_VALID_AUTH_TOKEN;
 
   beforeEach(() => {
     // creates a test Angular Module which we can use to instantiate components
@@ -28,7 +29,7 @@ describe('Auth Service with JwtHelperService mock', () => {
       ],
       providers: [
         AuthService,
-        {provide: JwtHelperService, useClass: JwtHelperServiceMock}] // Swap the real JwtHelper service with our mock
+        {provide: JwtHelperService, useClass: JwtHelperServiceMock}] // Swap the real JwtHelper service with our fake class
     });
 
     // resolve dependencies using the TestBed injector
@@ -46,16 +47,16 @@ describe('Auth Service with JwtHelperService mock', () => {
   // TESTS
   ///////////////////////////////////////////////////////////
 
-  it('isLoggedIn() should return true if there is a token', () => {
-    // There is a token
-    localStorage.setItem(storageTokenKey, '1234');
+  it('isLoggedIn() should return true if there is an authentication token', () => {
+    // There is an authentication token
+    localStorage.setItem(storageTokenKey, authToken);
 
     let res = service.isLoggedIn();
     expect(res).toBeTruthy();
   });
 
-  it('isLoggedIn() should return false if there is no token', () => {
-    // no token
+  it('isLoggedIn() should return false if there is no authentication token', () => {
+    // no authentication token
 
     let res = service.isLoggedIn();
     expect(res).toBeFalsy();

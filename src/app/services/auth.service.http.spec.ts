@@ -3,7 +3,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
-import { TOKENKEY, AUTH_BASE_URL } from './const';
+import { TOKENKEY, FAKE_VALID_AUTH_TOKEN, AUTH_BASE_URL } from './const';
 import { GetToken } from './utils';
 
 // Tests in the context of the Angular Framework with a TestBed
@@ -12,6 +12,7 @@ describe('Auth Service mocking Http', () => {
   let service, httpMock, jwtHelper;
   const baseUrl: string = AUTH_BASE_URL;
   const storageTokenKey: string = TOKENKEY;
+  const authToken: string = FAKE_VALID_AUTH_TOKEN;
 
   beforeEach(() => {
     // creates a test Angular Module which we can use to instantiate components
@@ -42,17 +43,18 @@ describe('Auth Service mocking Http', () => {
 
   ///////////////////////////////////////////////////////////
 
-  it('should return true from getToken when there is a token', () => {
-    localStorage.setItem(storageTokenKey, '1234');
+  it('should return true from getToken when there is an authentication token', () => {
+    localStorage.setItem(storageTokenKey, authToken);
     expect(service.getToken()).toBeTruthy();
   });
 
-  it('should return false from getToken when there is no token', () => {
+  it('should return false from getToken when there is no authentication token', () => {
     expect(service.getToken()).toBeFalsy();
   });
 
   it('should login with admin', fakeAsync(() => {
     let result;
+    const dummyResponse = {token: authToken}
 
     service
       .login("admin", "admin")
@@ -60,13 +62,14 @@ describe('Auth Service mocking Http', () => {
 
       const req = httpMock.expectOne(baseUrl);
       expect(req.request.method).toBe("POST");
-      req.flush({token: '123'});
+      req.flush(dummyResponse);
 
       expect(result).toBeTruthy();
   }));
 
   it('should not login with user', fakeAsync(() => {
     let result;
+    let dummyResponse = {error: 'Invalid!'}
 
     service
     .login("user", "user")
@@ -74,7 +77,7 @@ describe('Auth Service mocking Http', () => {
 
     const req = httpMock.expectOne(baseUrl);
     expect(req.request.method).toBe("POST");
-    req.flush({error: 'Invalid!'});
+    req.flush(dummyResponse);
 
     expect(result).toBeFalsy();
   }));
