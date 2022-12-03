@@ -38,7 +38,6 @@
     "@types/node": "^12.11.1",
     "chance": "^1.1.4",
     "codelyzer": "^6.0.0",
-    "cypress": "^6.5.0",
     "jasmine-auto-spies": "^6.9.3",
     "jasmine-core": "~3.6.0",
     "jasmine-expect": "^5.0.0",
