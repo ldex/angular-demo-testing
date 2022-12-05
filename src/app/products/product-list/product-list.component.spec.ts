@@ -1,13 +1,12 @@
-import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from '../product.interface';
 import { Spy, provideAutoSpy, createSpyFromClass } from 'jasmine-auto-spies';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FavouriteService } from 'src/app/services/favourite.service';
 import { ProductListComponent } from './product-list.component';
 import { DebugElement, Pipe } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { OrderBy } from '../orderBy.pipe';
 
 export function mockPipe(options: Pipe): Pipe {
     const metadata: Pipe = {

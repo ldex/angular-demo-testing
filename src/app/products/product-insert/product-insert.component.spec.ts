@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from '../product.interface';
 import { ProductInsertComponent } from "./product-insert.component";
-import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
+import { Spy, provideAutoSpy } from 'jasmine-auto-spies';
 import { Router } from '@angular/router';
 
 // Declare a mock for the Router service
@@ -22,7 +22,7 @@ describe('Product Insert Component (Reactive Form)', () => {
             imports: [ReactiveFormsModule, FormsModule],
             declarations: [ProductInsertComponent],
             providers: [
-                { provide: ProductService, useValue: createSpyFromClass(ProductService) },
+                provideAutoSpy(ProductService), // same as { provide: ProductService, useValue: createSpyFromClass(ProductService) },
                 { provide: Router, useClass: RouterMock }
             ]
         });

@@ -40,7 +40,5 @@ The app is running on `http://localhost:4200/` and will automatically reload if 
 
 Run `ng test` for unit tests.
 
-Run `ng e2e` for end-to-end tests with Protractor.
-
 Run `npx cypress open` for end-to-end tests with Cypress.
 
