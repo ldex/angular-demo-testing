@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminService } from '../services/admin.service';
 
 import JasmineExpect from "jasmine-expect";
-import { Spy, createSpyFromClass } from 'jasmine-auto-spies';
+import { Spy, createSpyFromClass, provideAutoSpy } from 'jasmine-auto-spies';
 
 import { AdminComponent } from './admin.component';
 
@@ -11,10 +11,10 @@ describe('Admin Component', () => {
   let fixture: ComponentFixture<AdminComponent>;
   let adminServiceSpy: Spy<AdminService>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [AdminComponent],
-      providers: [{ provide: AdminService, useValue: createSpyFromClass(AdminService) }]
+      providers: [provideAutoSpy(AdminService)]
     })
 
     adminServiceSpy = TestBed.inject<any>(AdminService);
@@ -24,10 +24,6 @@ describe('Admin Component', () => {
     fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create an instance', () => {
-    expect(component).toBeTruthy();
   });
 
   it('should have empty profile', () => {

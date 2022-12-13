@@ -6,9 +6,7 @@ describe('Favourite Service', () => {
     let service: FavouriteService;
     let fakeProduct: Product;
 
-    beforeEach(() => { service = new FavouriteService(); });
-
-    beforeEach(() => {
+    beforeAll(() => {
         fakeProduct = {
             name: 'Trek SSL 2015',
             price: 999.9,
@@ -18,7 +16,9 @@ describe('Favourite Service', () => {
             imageUrl: '',
             modifiedDate: new Date(2021, 3, 2)
         }
-    });
+    })
+
+    beforeEach(() => { service = new FavouriteService(); });
 
     it('should have 0 favourite', () => {
         expect(service.favourites.size).toBe(0);
