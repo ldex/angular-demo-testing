@@ -1,10 +1,9 @@
-import { Observable } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 import { FavouriteService } from './../../services/favourite.service';
 import { ProductService } from './../../services/product.service';
 import { Product } from './../product.interface';
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { filter, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-product-list',
@@ -20,7 +19,7 @@ export class ProductListComponent implements OnInit {
     selectedProduct: Product;
     sorter: string = "-modifiedDate";
     message: string = "";
-   
+
     pageSize: number = 5;
     start: number = 0;
     end: number = this.pageSize;
@@ -48,7 +47,7 @@ export class ProductListComponent implements OnInit {
     loadMore(): void {
         let take: number = this.productsToLoad;
         let skip: number = this.end;
-    
+
         this.productService.loadProducts(skip, take);
       }
 
@@ -64,7 +63,7 @@ export class ProductListComponent implements OnInit {
 
     newFavourite(product: Product): void {
         this.message = `Product
-                        ${product.name} 
+                        ${product.name}
                         added to your favourites!`;
     }
 
@@ -78,7 +77,7 @@ export class ProductListComponent implements OnInit {
         private router: Router)
     {}
 
-    ngOnInit() { 
+    ngOnInit() {
         this.products$ = this.productService.products$.pipe(filter(products => products.length > 0));
         this.productsNumber$ = this.products$.pipe(map(products => products.length))
         this.productsTotalNumber$ = this.productService.productsTotalNumber$;

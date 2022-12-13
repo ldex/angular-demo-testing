@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from "rxjs/operators";
+import { Observable, of, map, catchError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TOKENKEY, AUTH_BASE_URL } from './const';
 
@@ -43,7 +42,7 @@ export class AuthService {
           console.error(err);
           return of(false);
         })
-      ); 
+      );
   }
 
   logout(): void {
