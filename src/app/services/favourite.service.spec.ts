@@ -8,13 +8,13 @@ describe('Favourite Service', () => {
 
     beforeAll(() => {
         fakeProduct = {
-            name: 'Trek SSL 2015',
-            price: 999.9,
+            name: 'Trek SSL 2023',
+            price: 1999.9,
             description: 'Racing bike.',
             discontinued: false,
             fixedPrice: false,
             imageUrl: '',
-            modifiedDate: new Date(2021, 3, 2)
+            modifiedDate: new Date(2023, 1, 2)
         }
     })
 
