@@ -27,7 +27,7 @@
 Cypress.Commands.add('loginAs', (UserEmail, UserPwd) => {
   cy.request({
     method: 'POST',
-    url: "https://demo2065076.mockable.io/api/login",
+    url: "https://demo8958817.mockable.io/api/login",
     body: {
       user: {
         username: UserEmail,
