@@ -23,11 +23,12 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import { AUTH_BASE_URL } from './../../src/app/services/const';
 
 Cypress.Commands.add('loginAs', (UserEmail, UserPwd) => {
   cy.request({
     method: 'POST',
-    url: "https://demo8958817.mockable.io/api/login",
+    url: AUTH_BASE_URL,
     body: {
       user: {
         username: UserEmail,
