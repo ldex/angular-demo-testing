@@ -43,16 +43,16 @@ describe('Auth Service mocking Http', () => {
 
   ///////////////////////////////////////////////////////////
 
-  it('should return true from getToken when there is an authentication token', () => {
+  it('should return something from getToken when there is an authentication token', () => {
     localStorage.setItem(storageTokenKey, authToken);
     expect(service.getToken()).toBeTruthy();
   });
 
-  it('should return false from getToken when there is no authentication token', () => {
+  it('should return nothing from getToken when there is no authentication token', () => {
     expect(service.getToken()).toBeFalsy();
   });
 
-  it('should login with admin', fakeAsync(() => {
+  it('should login with admin', () => {
     let result;
     const dummyResponse = {token: authToken}
 
@@ -65,9 +65,9 @@ describe('Auth Service mocking Http', () => {
       req.flush(dummyResponse);
 
       expect(result).toBeTruthy();
-  }));
+  });
 
-  it('should not login with user', fakeAsync(() => {
+  it('should not login with user', () => {
     let result;
     let dummyResponse = {error: 'Invalid!'}
 
@@ -80,5 +80,5 @@ describe('Auth Service mocking Http', () => {
     req.flush(dummyResponse);
 
     expect(result).toBeFalsy();
-  }));
+  });
 });
