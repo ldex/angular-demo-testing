@@ -93,6 +93,6 @@
           }
         }
       }
-    }},
-  "defaultProject": "angular-demo-testing"
+    }
+  }
 }
