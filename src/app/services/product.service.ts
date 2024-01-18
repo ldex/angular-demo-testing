@@ -2,7 +2,7 @@ import { Product } from './../products/product.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { config } from 'src/environments/environment';
-import { BehaviorSubject, Observable, throwError, flatMap, first, shareReplay, delay } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, first, shareReplay, delay, mergeMap } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -28,7 +28,7 @@ export class ProductService {
 
     getProductById(id: number): Observable<Product> {
         return this.products$.pipe(
-          flatMap(p => p),
+          mergeMap(p => p),
           first(product => product.id == id)
         );
     }

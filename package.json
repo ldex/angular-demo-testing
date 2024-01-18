@@ -18,7 +18,7 @@
     "@angular/platform-browser": "^17.1.0",
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
-    "@auth0/angular-jwt": "5.0.2",
+    "@auth0/angular-jwt": "5.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.14.3"
@@ -33,7 +33,7 @@
     "@types/jasmine-expect": "^3.8.1",
     "@types/node": "^12.11.1",
     "chance": "^1.1.4",
-    "jasmine-auto-spies": "^6.9.9",
+    "jasmine-auto-spies": "^8.0.1",
     "jasmine-core": "~4.0.0",
     "jasmine-expect": "^5.0.0",
     "jasmine-spec-reporter": "~5.0.0",
