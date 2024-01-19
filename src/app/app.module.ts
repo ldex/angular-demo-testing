@@ -32,7 +32,7 @@ import { GetToken } from './services/utils';
     JwtModule.forRoot({
       config: {
         tokenGetter: GetToken,
-        allowedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net']
+        allowedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net', 'https://retoolapi.dev']
       }
     }),
   ],

@@ -32,7 +32,7 @@ describe('Products Service', () => {
 
     let defaultProductsNbToGet = 10;
 
-    let url = `${baseUrl}?$skip=0&$top=${defaultProductsNbToGet}&$orderby=ModifiedDate%20desc`;
+    let url = `${baseUrl}?_start=0&_limit=${defaultProductsNbToGet}&_sort=modifiedDate&_order=desc`;
 
     let actualProducts;
     service.products$.subscribe(products => actualProducts = products);
@@ -46,7 +46,7 @@ describe('Products Service', () => {
 
     // The tick() function blocks execution and simulates the passage of time until all pending asynchronous activities complete.
     // Waits for the observable to be resolved and then lets execution move to the next line
-    tick(1000); // Here it's because we have a delay(1000) in the service....
+    tick(500); // Here it's because we have a delay(500) in the service....
 
     expect(actualProducts.length).toBe(defaultProductsNbToGet);
     expect(actualProducts).toEqual(dummyProducts); // verify that there was no incorrect sorting of filtering involved

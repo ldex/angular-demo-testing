@@ -1,8 +1,8 @@
 import { Product } from './../products/product.interface';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { config } from 'src/environments/environment';
-import { BehaviorSubject, Observable, throwError, first, shareReplay, delay, mergeMap } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, first, shareReplay, delay, mergeMap, tap } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -11,11 +11,11 @@ export class ProductService {
 
     private products = new BehaviorSubject<Product[]>([]);
     products$: Observable<Product[]> = this.products.asObservable();
-    productsTotalNumber$: Observable<number>;
+    productsTotalNumber$: BehaviorSubject<number> = new BehaviorSubject(0);
+    productsToLoad = 10;
 
     constructor(private http: HttpClient) {
         this.loadProducts();
-        this.initProductsTotalNumber();
     }
 
     deleteProduct(id: number): Observable<any> {
@@ -23,6 +23,7 @@ export class ProductService {
     }
 
     insertProduct(newProduct: Product): Observable<Product> {
+        newProduct.modifiedDate = new Date();
         return this.http.post<Product>(this.baseUrl, newProduct);
     }
 
@@ -33,50 +34,42 @@ export class ProductService {
         );
     }
 
-    private initProductsTotalNumber() {
-        this.productsTotalNumber$ =
-            this
-            .http
-            .get<number>(this.baseUrl + "/count")
-            .pipe(
-                shareReplay()
-            );
-    }
-
-    loadProducts(skip: number = 0, take: number = 10): void {
-        let url = `${this.baseUrl}?$skip=${skip}&$top=${take}&$orderby=ModifiedDate%20desc`;
-
+    loadProducts(skip: number = 0, take: number = this.productsToLoad): void {
         if (skip == 0 && this.products.value.length > 0) return;
 
+        const params = {
+            _start: skip,
+            _limit: take,
+            _sort: 'modifiedDate',
+            _order: 'desc'
+        }
+
+        const options = {
+          params: params,
+          observe: 'response' as 'response' // in order to read params from the response header
+        };
+
         this.http
-          .get<Product[]>(url)
+          .get(this.baseUrl, options)
           .pipe(
-            delay(1000),
+            delay(500),
+            tap(response => {
+              let count = response.headers.get('X-Total-Count') // total number of products
+              if(count)
+                this.productsTotalNumber$.next(Number(count))
+            }),
             shareReplay()
           )
-          .subscribe(products => {
+          .subscribe((response: HttpResponse<Product[]>) => {
+            let newProducts = response.body;
             let currentProducts = this.products.value;
-            let mergedProducts = currentProducts.concat(products);
+            let mergedProducts = currentProducts.concat(newProducts);
             this.products.next(mergedProducts);
           });
-    }
+      }
 
     clearList() {
         this.products.next([]);
         this.loadProducts();
-    }
-
-    private handleError(errorResponse: HttpErrorResponse) {
-        let errorMsg: string;
-        if (errorResponse.error instanceof Error) {
-            // A client-side or network error occurred. Handle it accordingly.
-            errorMsg = 'An error occurred:' + errorResponse.error.message;
-        } else {
-            // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`;
-        }
-        console.error(errorMsg);
-        return throwError(errorMsg);
     }
 }
