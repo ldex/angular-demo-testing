@@ -10,7 +10,7 @@ import { GetToken } from './utils';
 // Tests in the context of the Angular Framework with a TestBed
 describe('Auth Service with JwtHelperService spy', () => {
   let service: AuthService;
-  let jwtHelperService: JwtHelperService;
+  let jwtHelperService: any;
   const storageTokenKey: string = TOKENKEY;
 
   beforeEach(() => {
@@ -39,15 +39,16 @@ describe('Auth Service with JwtHelperService spy', () => {
   // TESTS
   ///////////////////////////////////////////////////////////
 
-  it('isLoggedIn() should return true if there is an auth token', () => {
+  it('isLoggedIn() should return true if there is a valid auth token', () => {
     // There is a token in local storage
     localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
 
-    spyOn(jwtHelperService, "isTokenExpired").and.resolveTo(false);
+    // Simulate a return value if isTokenExpired() is called
+    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
 
     const res = service.isLoggedIn();
 
-    // expect(res).toBeTruthy();
+     expect(res).toBeTruthy();
      expect(jwtHelperService.isTokenExpired).toHaveBeenCalled();
   });
 
@@ -55,7 +56,8 @@ describe('Auth Service with JwtHelperService spy', () => {
     // No token in local storage
 
     // Spy for external dependency but should not be called anyway
-    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(Promise.resolve(false));
+    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
+
 
     let res = service.isLoggedIn();
 
