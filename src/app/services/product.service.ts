@@ -18,8 +18,8 @@ export class ProductService {
         this.loadProducts();
     }
 
-    deleteProduct(id: number): Observable<any> {
-        return this.http.delete(`${this.baseUrl}/${id}`);
+    deleteProduct(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${id}`);
     }
 
     insertProduct(newProduct: Product): Observable<Product> {
@@ -52,7 +52,7 @@ export class ProductService {
         this.http
           .get(this.baseUrl, options)
           .pipe(
-            delay(500),
+           // delay(500),
             tap(response => {
               let count = response.headers.get('X-Total-Count') // total number of products
               if(count)

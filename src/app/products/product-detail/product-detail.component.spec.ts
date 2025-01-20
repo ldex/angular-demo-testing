@@ -105,7 +105,7 @@ describe('Product Detail Component', () => {
         routerServiceSpy.navigateByUrl.and.resolveTo(true);
         dialogServiceSpy.confirm.and.resolveTo(true);
         const productId = 1;
-        productServiceSpy.deleteProduct.and.nextOneTimeWith(productId);
+        productServiceSpy.deleteProduct.and.nextWith(null);
         component.deleteProduct(productId);
         tick(); // there are pending asynchronous activities we want to complete.
         expect(dialogServiceSpy.confirm).toHaveBeenCalled();

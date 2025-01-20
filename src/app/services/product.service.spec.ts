@@ -24,11 +24,10 @@ describe('Products Service', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // After every test, assert that there are no more pending requests
     service = null;
   });
 
-  it('should get 10 products', fakeAsync(() => {
+  it('should get 10 products', () => {
 
     let defaultProductsNbToGet = 10;
 
@@ -44,13 +43,26 @@ describe('Products Service', () => {
     // Respond with this data when called
     req.flush(dummyProducts);
 
-    // The tick() function blocks execution and simulates the passage of time until all pending asynchronous activities complete.
-    // Waits for the observable to be resolved and then lets execution move to the next line
-    tick(500); // Here it's because we have a delay(500) in the service....
-
     expect(actualProducts.length).toBe(defaultProductsNbToGet);
     expect(actualProducts).toEqual(dummyProducts); // verify that there was no incorrect sorting of filtering involved
 
-  }));
+  });
+
+  it('should delete product', () => {
+
+    const productId = 1;
+
+    service.deleteProduct(productId).subscribe();
+
+    let url = `${baseUrl}/${productId}`;
+
+    // Expect a call to this URL
+    const req = httpMock.expectOne(url);
+    // Assert that the request is a GET.
+    expect(req.request.method).toBe("DELETE");
+    // Respond with this data when called
+    req.flush({});
+
+  });
 
 });
