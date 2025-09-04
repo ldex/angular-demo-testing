@@ -6,7 +6,6 @@ import { NgForm, FormsModule } from "@angular/forms";
 @Component({
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
-    standalone: true,
     imports: [FormsModule]
 })
 export class LoginComponent {

@@ -8,7 +8,6 @@ import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators, F
     selector: 'app-product-insert',
     templateUrl: './product-insert.component.html',
     styleUrls: ['./product-insert.component.css'],
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule]
 })
 export class ProductInsertComponent implements OnInit {

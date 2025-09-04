@@ -11,7 +11,6 @@ import { OrderBy } from '../orderBy.pipe';
     selector: 'app-product-list',
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css'],
-    standalone: true,
     imports: [RouterLink, AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe, OrderBy]
 })
 export class ProductListComponent implements OnInit {

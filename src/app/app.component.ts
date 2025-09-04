@@ -7,7 +7,6 @@ import { Component, OnInit, VERSION, inject } from '@angular/core';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    standalone: true,
     imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class AppComponent implements OnInit {

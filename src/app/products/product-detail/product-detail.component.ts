@@ -13,7 +13,6 @@ import { DefaultPipe } from '../default.pipe';
     selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.css'],
-    standalone: true,
     imports: [AsyncPipe, UpperCasePipe, CurrencyPipe, DatePipe, DefaultPipe]
 })
 export class ProductDetailComponent implements OnInit {
