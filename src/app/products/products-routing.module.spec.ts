@@ -4,10 +4,11 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
 
 import { routes } from "./products-routing.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { LoginRouteGuard } from "../services/login-route-guard.service";
 import { AuthService } from "../services/auth.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 class JwtHelperServiceMock {
   isTokenExpired() : boolean {
@@ -22,16 +23,15 @@ describe('Products Routing', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes(routes)
-      ],
-      providers: [
+    imports: [RouterTestingModule.withRoutes(routes)],
+    providers: [
         AuthService,
         LoginRouteGuard,
-        {provide: JwtHelperService, useClass: JwtHelperServiceMock}
-      ]
-    });
+        { provide: JwtHelperService, useClass: JwtHelperServiceMock },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
 
     router = TestBed.inject(Router);
     location = TestBed.inject(Location);

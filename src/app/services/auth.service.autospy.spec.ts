@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
@@ -6,6 +6,7 @@ import { provideAutoSpy, Spy } from 'jasmine-auto-spies';
 import { AuthService } from './auth.service';
 import { TOKENKEY, FAKE_VALID_AUTH_TOKEN } from './const';
 import { GetToken } from './utils';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('Auth Service with JwtHelperService auto spy', () => {
   let service;
@@ -15,15 +16,15 @@ describe('Auth Service with JwtHelperService auto spy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        JwtModule
-      ],
-      providers: [
+    imports: [JwtModule],
+    providers: [
         AuthService,
         provideAutoSpy(JwtHelperService) // same as {provide: JwtHelperService, useClass: createSpyFromClass(JwtHelperService)}
-      ]
-    });
+        ,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(AuthService);
     jwtHelperServiceSpy = TestBed.inject<any>(JwtHelperService);
   });

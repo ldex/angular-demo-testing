@@ -1,10 +1,11 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { TOKENKEY, FAKE_VALID_AUTH_TOKEN, AUTH_BASE_URL } from './const';
 import { GetToken } from './utils';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // Tests in the context of the Angular Framework with a TestBed
 // Replacing HTTP calls with a httpMock
@@ -18,15 +19,14 @@ describe('Auth Service mocking Http', () => {
     // creates a test Angular Module which we can use to instantiate components
     // perform dependency injection and so on
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        JwtModule.forRoot({ config: {tokenGetter: GetToken} })
-      ],
-      providers: [
+    imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
+    providers: [
         AuthService,
-        JwtHelperService
-      ]
-    });
+        JwtHelperService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
 
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(AuthService);

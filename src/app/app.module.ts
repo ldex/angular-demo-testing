@@ -11,36 +11,30 @@ import { HomeComponent } from './common/home.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { GetToken } from './services/utils';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    ContactComponent,
-    AdminComponent,
-    LoginComponent,
-    ErrorComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: GetToken,
-        allowedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net', 'https://retoolapi.dev']
-      }
-    }),
-  ],
-  providers: [
-    LoginRouteGuard,
-    AuthService,
-    AdminService,
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        ContactComponent,
+        AdminComponent,
+        LoginComponent,
+        ErrorComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        AppRoutingModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: GetToken,
+                allowedDomains: ['localhost:4200', 'storerestservice.azurewebsites.net', 'https://retoolapi.dev']
+            }
+        })], providers: [
+        LoginRouteGuard,
+        AuthService,
+        AdminService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }

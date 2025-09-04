@@ -1,9 +1,10 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import {ProductService} from './product.service';
 import { dummyProducts } from './dummyProducts';
 import { API_BASE_URL } from './const';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('Products Service', () => {
   let service: ProductService;
@@ -14,9 +15,9 @@ describe('Products Service', () => {
     // creates a test Angular Module which we can use to instantiate components
     // perform dependency injection and so on
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ProductService]
-    });
+    imports: [],
+    providers: [ProductService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(ProductService);
