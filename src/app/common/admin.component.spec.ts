@@ -13,9 +13,9 @@ describe('Admin Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdminComponent],
-      providers: [provideAutoSpy(AdminService)]
-    })
+    imports: [AdminComponent],
+    providers: [provideAutoSpy(AdminService)]
+})
 
     adminServiceSpy = TestBed.inject<any>(AdminService);
   });

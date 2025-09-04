@@ -1,17 +1,15 @@
 import { Router } from '@angular/router';
 import { ProductService } from './../../services/product.service';
 import { Component, OnInit } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  UntypedFormControl,
-  Validators
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @Component({
-  selector: 'app-product-insert',
-  templateUrl: './product-insert.component.html',
-  styleUrls: ['./product-insert.component.css']
+    selector: 'app-product-insert',
+    templateUrl: './product-insert.component.html',
+    styleUrls: ['./product-insert.component.css'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule]
 })
 export class ProductInsertComponent implements OnInit {
 

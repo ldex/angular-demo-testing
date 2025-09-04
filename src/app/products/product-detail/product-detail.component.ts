@@ -6,11 +6,15 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from 'src/app/services/auth.service';
 import { DialogService } from 'src/app/services/dialog.service';
+import { AsyncPipe, UpperCasePipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { DefaultPipe } from '../default.pipe';
 
 @Component({
-  selector: 'app-product-detail',
-  templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css']
+    selector: 'app-product-detail',
+    templateUrl: './product-detail.component.html',
+    styleUrls: ['./product-detail.component.css'],
+    standalone: true,
+    imports: [AsyncPipe, UpperCasePipe, CurrencyPipe, DatePipe, DefaultPipe]
 })
 export class ProductDetailComponent implements OnInit {
 

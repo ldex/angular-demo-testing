@@ -3,12 +3,16 @@ import { FavouriteService } from './../../services/favourite.service';
 import { ProductService } from './../../services/product.service';
 import { Product } from './../product.interface';
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe } from '@angular/common';
+import { OrderBy } from '../orderBy.pipe';
 
 @Component({
     selector: 'app-product-list',
     templateUrl: './product-list.component.html',
-    styleUrls: ['./product-list.component.css']
+    styleUrls: ['./product-list.component.css'],
+    standalone: true,
+    imports: [RouterLink, AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe, OrderBy]
 })
 export class ProductListComponent implements OnInit {
 

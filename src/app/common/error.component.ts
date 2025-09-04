@@ -2,7 +2,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    templateUrl: './error.component.html'
+    templateUrl: './error.component.html',
+    standalone: true
 })
 export class ErrorComponent implements OnInit {
 

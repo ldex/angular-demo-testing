@@ -1,11 +1,13 @@
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { NgForm } from "@angular/forms";
+import { NgForm, FormsModule } from "@angular/forms";
 
 @Component({
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    styleUrls: ['./login.component.css'],
+    standalone: true,
+    imports: [FormsModule]
 })
 export class LoginComponent {
 

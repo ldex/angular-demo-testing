@@ -2,7 +2,8 @@ import { AdminService } from './../services/admin.service';
 import { Component } from '@angular/core';
 
 @Component({
-    templateUrl: './admin.component.html'
+    templateUrl: './admin.component.html',
+    standalone: true
 })
 export class AdminComponent {
     constructor(private adminService: AdminService) { }

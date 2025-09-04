@@ -15,16 +15,14 @@ import { DefaultPipe } from './default.pipe';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        ProductsRoutingModule
-    ],
-    exports: [ProductListComponent],
-    declarations: [
+        ProductsRoutingModule,
         ProductDetailComponent,
         ProductListComponent,
         ProductInsertComponent,
         OrderBy,
         DefaultPipe
     ],
+    exports: [ProductListComponent],
     providers: [ProductService, FavouriteService],
 })
 export class ProductsModule { }

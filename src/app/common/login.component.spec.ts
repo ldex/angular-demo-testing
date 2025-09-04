@@ -24,13 +24,12 @@ describe('Login Component', () => {
     beforeEach(async() => {
         // refine the test module by declaring the test component
         TestBed.configureTestingModule({
-            imports: [FormsModule],
-            declarations: [LoginComponent],
-            providers: [
-                { provide: AuthService, useValue: createSpyFromClass(AuthService) },
-                { provide: Router, useClass: RouterMock }
-            ]
-        });
+    imports: [FormsModule, LoginComponent],
+    providers: [
+        { provide: AuthService, useValue: createSpyFromClass(AuthService) },
+        { provide: Router, useClass: RouterMock }
+    ]
+});
 
         // Spy for the Auth Service
         authServiceSpy = TestBed.inject<any>(AuthService);

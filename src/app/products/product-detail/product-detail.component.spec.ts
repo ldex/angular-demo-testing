@@ -30,17 +30,16 @@ describe('Product Detail Component', () => {
     beforeEach(() => {
         // refine the test module by declaring the test component
         TestBed.configureTestingModule({
-            imports: [],
-            declarations: [ProductDetailComponent, DefaultPipe],
-            providers: [
-                provideAutoSpy(ProductService), // same as { provide: ProductService, useValue: createSpyFromClass(ProductService) },
-                provideAutoSpy(FavouriteService),
-                provideAutoSpy(AuthService),
-                provideAutoSpy(DialogService),
-                provideAutoSpy(Router),
-                { provide: ActivatedRoute, useClass: ActivatedRouteMock }
-            ]
-        });
+    imports: [ProductDetailComponent, DefaultPipe],
+    providers: [
+        provideAutoSpy(ProductService), // same as { provide: ProductService, useValue: createSpyFromClass(ProductService) },
+        provideAutoSpy(FavouriteService),
+        provideAutoSpy(AuthService),
+        provideAutoSpy(DialogService),
+        provideAutoSpy(Router),
+        { provide: ActivatedRoute, useClass: ActivatedRouteMock }
+    ]
+});
 
         // Spy for the services
         productServiceSpy = TestBed.inject<any>(ProductService);

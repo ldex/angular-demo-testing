@@ -28,17 +28,14 @@ describe('Product List Component', () => {
     beforeEach(() => {
         // refine the test module by declaring the test component
         TestBed.configureTestingModule({
-            imports: [],
-            declarations: [
-                ProductListComponent,
-                mockPipe({ name: 'orderBy' })
-            ],
-            providers: [
-                { provide: ProductService, useValue: createSpyFromClass(ProductService, { observablePropsToSpyOn: ['products$', 'productsTotalNumber$'] }) },
-                provideAutoSpy(FavouriteService), // same as { provide: FavouriteService, useValue: createSpyFromClass(FavouriteService) },
-                provideAutoSpy(Router)
-            ]
-        });
+    imports: [ProductListComponent,
+        mockPipe({ name: 'orderBy' })],
+    providers: [
+        { provide: ProductService, useValue: createSpyFromClass(ProductService, { observablePropsToSpyOn: ['products$', 'productsTotalNumber$'] }) },
+        provideAutoSpy(FavouriteService), // same as { provide: FavouriteService, useValue: createSpyFromClass(FavouriteService) },
+        provideAutoSpy(Router)
+    ]
+});
 
         // Spy for the services
         productServiceSpy = TestBed.inject<any>(ProductService);

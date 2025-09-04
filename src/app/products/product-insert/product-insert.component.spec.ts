@@ -19,13 +19,12 @@ describe('Product Insert Component (Reactive Form)', () => {
     beforeEach(() => {
         // refine the test module by declaring the test component
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, FormsModule],
-            declarations: [ProductInsertComponent],
-            providers: [
-                provideAutoSpy(ProductService), // same as { provide: ProductService, useValue: createSpyFromClass(ProductService) },
-                { provide: Router, useClass: RouterMock }
-            ]
-        });
+    imports: [ReactiveFormsModule, FormsModule, ProductInsertComponent],
+    providers: [
+        provideAutoSpy(ProductService), // same as { provide: ProductService, useValue: createSpyFromClass(ProductService) },
+        { provide: Router, useClass: RouterMock }
+    ]
+});
 
         // Spy for the Product Service
         productServiceSpy = TestBed.inject<any>(ProductService);

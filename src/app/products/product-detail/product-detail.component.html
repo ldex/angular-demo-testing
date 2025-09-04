@@ -1,4 +1,5 @@
-<div *ngIf="product$ | async as product">
+@if (product$ | async; as product) {
+  <div>
     <h2>{{product.name | uppercase}}</h2>
     <img style="float:right" [src]="product.imageUrl | default:'https://picsum.photos/seed/[0-9]{5}/250/150'" width="250" />
     <h3>{{product.description}}</h3>
@@ -7,13 +8,14 @@
     <p>Discontinued? {{product.discontinued}}
     </p>
     <p>Modified date:
-        {{product.modifiedDate | date}}</p>
+    {{product.modifiedDate | date}}</p>
     <p>
       <button (click)="addToFavourites(product)">
-        Add to favourites</button>
-
+      Add to favourites</button>
+      @if (isAuthenticated()) {
         <button (click)="deleteProduct(product.id)"
-                *ngIf="isAuthenticated()"
-                id="deleteButton">Delete</button>
+        id="deleteButton">Delete</button>
+      }
     </p>
-</div>
+  </div>
+}

@@ -19,9 +19,9 @@ describe('Error Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-        declarations: [ErrorComponent],
-        providers: [{ provide: ActivatedRoute, useClass: ActivatedRouteMock }]
-    })
+    imports: [ErrorComponent],
+    providers: [{ provide: ActivatedRoute, useClass: ActivatedRouteMock }]
+})
 
     service = TestBed.inject<any>(ActivatedRoute);
   });
