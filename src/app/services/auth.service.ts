@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, map, catchError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TOKENKEY, AUTH_BASE_URL } from './const';
@@ -11,13 +11,17 @@ interface AuthResponse {
 
 @Injectable()
 export class AuthService {
+  private http = inject(HttpClient);
+  private jwtHelper = inject(JwtHelperService);
+
 
   private storageTokenKey: string = TOKENKEY;
   public baseUrl: string = AUTH_BASE_URL;
 
-  constructor(
-    private http: HttpClient,
-    private jwtHelper: JwtHelperService) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
   }
 
   login(username: string, password: string): Observable<boolean> {

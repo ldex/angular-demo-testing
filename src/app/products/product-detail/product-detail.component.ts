@@ -1,7 +1,7 @@
 import { ProductService } from './../../services/product.service';
 import { FavouriteService } from './../../services/favourite.service';
 import { Product } from './../product.interface';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, inject } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,20 +17,23 @@ import { DefaultPipe } from '../default.pipe';
     imports: [AsyncPipe, UpperCasePipe, CurrencyPipe, DatePipe, DefaultPipe]
 })
 export class ProductDetailComponent implements OnInit {
+  private favouriteService = inject(FavouriteService);
+  private productService = inject(ProductService);
+  private authService = inject(AuthService);
+  private dialogService = inject(DialogService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
 
   product$: Observable<Product>;
   productSub: Subscription;
 
   @Output() favouriteAdded = new EventEmitter<Product>();
 
-  constructor(
-    private favouriteService: FavouriteService,
-    private productService: ProductService,
-    private authService: AuthService,
-    private dialogService: DialogService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() { }
 
   // deleteProductNotTestable(id: number) {
   //   if (window.confirm('Are you sure to delete this product ?')) {

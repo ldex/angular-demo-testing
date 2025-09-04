@@ -1,11 +1,13 @@
 import { Product } from './../products/product.interface';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { config } from 'src/environments/environment';
 import { BehaviorSubject, Observable, throwError, first, shareReplay, delay, mergeMap, tap } from 'rxjs';
 
 @Injectable()
 export class ProductService {
+    private http = inject(HttpClient);
+
 
     private baseUrl: string = `${config.apiUrl}/products`;
 
@@ -14,7 +16,10 @@ export class ProductService {
     productsTotalNumber$: BehaviorSubject<number> = new BehaviorSubject(0);
     productsToLoad = 10;
 
-    constructor(private http: HttpClient) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.loadProducts();
     }
 

@@ -2,7 +2,7 @@ import { Observable, filter, map } from 'rxjs';
 import { FavouriteService } from './../../services/favourite.service';
 import { ProductService } from './../../services/product.service';
 import { Product } from './../product.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe } from '@angular/common';
 import { OrderBy } from '../orderBy.pipe';
@@ -15,6 +15,10 @@ import { OrderBy } from '../orderBy.pipe';
     imports: [RouterLink, AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe, OrderBy]
 })
 export class ProductListComponent implements OnInit {
+    private productService = inject(ProductService);
+    private favouriteService = inject(FavouriteService);
+    private router = inject(Router);
+
 
     title: string = "Products";
     products$: Observable<Product[]>;
@@ -75,10 +79,10 @@ export class ProductListComponent implements OnInit {
         return this.favouriteService.getFavouritesNb();
     }
 
-    constructor(
-        private productService: ProductService,
-        private favouriteService: FavouriteService,
-        private router: Router)
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor()
     {}
 
     ngOnInit() {

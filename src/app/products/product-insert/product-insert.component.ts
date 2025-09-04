@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { ProductService } from './../../services/product.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
@@ -12,6 +12,10 @@ import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators, F
     imports: [FormsModule, ReactiveFormsModule]
 })
 export class ProductInsertComponent implements OnInit {
+  private fb = inject(UntypedFormBuilder);
+  private productService = inject(ProductService);
+  private router = inject(Router);
+
 
   insertForm: UntypedFormGroup;
   name: UntypedFormControl;
@@ -19,10 +23,10 @@ export class ProductInsertComponent implements OnInit {
   description: UntypedFormControl;
   imageUrl: UntypedFormControl;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private productService: ProductService,
-    private router: Router) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     }
 
   onSubmit() {

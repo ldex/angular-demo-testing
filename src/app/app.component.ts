@@ -1,6 +1,6 @@
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Component, OnInit, VERSION } from '@angular/core';
+import { Component, OnInit, VERSION, inject } from '@angular/core';
 
 
 @Component({
@@ -11,12 +11,16 @@ import { Component, OnInit, VERSION } from '@angular/core';
     imports: [RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class AppComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   title = 'Angular Store';
   version = VERSION.full;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router) {}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();

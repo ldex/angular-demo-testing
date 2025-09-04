@@ -1,12 +1,17 @@
 import { AdminService } from './../services/admin.service';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component({
     templateUrl: './admin.component.html',
     standalone: true
 })
 export class AdminComponent {
-    constructor(private adminService: AdminService) { }
+    private adminService = inject(AdminService);
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() { }
 
     profile: string = '';
 

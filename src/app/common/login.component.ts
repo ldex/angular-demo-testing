@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { NgForm, FormsModule } from "@angular/forms";
 
 @Component({
@@ -10,13 +10,16 @@ import { NgForm, FormsModule } from "@angular/forms";
     imports: [FormsModule]
 })
 export class LoginComponent {
+    private authService = inject(AuthService);
+    private router = inject(Router);
+
 
     error: string = '';
 
-    constructor(
-        private authService: AuthService,
-        private router: Router
-    ) { }
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() { }
 
     loginUser(form: NgForm) {
         if (form.valid) {
