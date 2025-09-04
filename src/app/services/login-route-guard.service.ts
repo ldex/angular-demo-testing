@@ -3,14 +3,12 @@ import { AuthService } from './auth.service';
 
 import { Injectable, inject } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoginRouteGuard  {
   private authService = inject(AuthService);
   private router = inject(Router);
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
 
   constructor() {}
 

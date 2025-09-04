@@ -4,14 +4,13 @@ import { ProductService } from './../../services/product.service';
 import { Product } from './../product.interface';
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
-import { AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe } from '@angular/common';
-import { OrderBy } from '../orderBy.pipe';
+import { AsyncPipe, UpperCasePipe, SlicePipe, CurrencyPipe } from '@angular/common';
 
 @Component({
     selector: 'app-product-list',
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.css'],
-    imports: [RouterLink, AsyncPipe, UpperCasePipe, JsonPipe, SlicePipe, CurrencyPipe, OrderBy]
+    imports: [RouterLink, AsyncPipe, UpperCasePipe, SlicePipe, CurrencyPipe]
 })
 export class ProductListComponent implements OnInit {
     private productService = inject(ProductService);
@@ -24,7 +23,6 @@ export class ProductListComponent implements OnInit {
     productsNumber$: Observable<number>;
     productsTotalNumber$: Observable<number>;
     selectedProduct: Product;
-    sorter: string = "-modifiedDate";
     message: string = "";
 
     pageSize: number = 5;
@@ -58,11 +56,6 @@ export class ProductListComponent implements OnInit {
         this.productService.loadProducts(skip, take);
       }
 
-    sortList(propertyName:string): void {
-        this.sorter = this.sorter.startsWith("-") ? propertyName : "-" + propertyName;
-        this.firstPage();
-    }
-
     onSelect(product: Product): void {
         this.selectedProduct = product;
         this.router.navigateByUrl("/products/" + product.id);
@@ -77,9 +70,6 @@ export class ProductListComponent implements OnInit {
     get favourites(): number {
         return this.favouriteService.getFavouritesNb();
     }
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor()
     {}

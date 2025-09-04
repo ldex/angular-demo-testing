@@ -22,11 +22,6 @@ export class ProductInsertComponent implements OnInit {
   description: UntypedFormControl;
   imageUrl: UntypedFormControl;
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {
-    }
 
   onSubmit() {
     let newProduct = this.insertForm.value;

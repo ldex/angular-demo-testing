@@ -12,13 +12,7 @@ export class LoginComponent {
     private authService = inject(AuthService);
     private router = inject(Router);
 
-
     error: string = '';
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() { }
 
     loginUser(form: NgForm) {
         if (form.valid) {

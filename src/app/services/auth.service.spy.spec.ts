@@ -5,8 +5,10 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { TOKENKEY, FAKE_VALID_AUTH_TOKEN } from './const';
 import { GetToken } from './utils';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 // Tests in the context of the Angular Framework with a TestBed
 describe('Auth Service with JwtHelperService spy', () => {
@@ -18,14 +20,14 @@ describe('Auth Service with JwtHelperService spy', () => {
     // creates a test Angular Module which we can use to instantiate components
     // perform dependency injection and so on
     TestBed.configureTestingModule({
-    imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
-    providers: [
+      imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
+      providers: [
         AuthService,
         JwtHelperService,
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+        provideHttpClientTesting(),
+      ],
+    });
     service = TestBed.inject(AuthService);
     jwtHelperService = TestBed.inject(JwtHelperService);
   });
@@ -33,7 +35,6 @@ describe('Auth Service with JwtHelperService spy', () => {
   afterEach(() => {
     localStorage.removeItem(storageTokenKey); // clear local storage after each test
   });
-
 
   ///////////////////////////////////////////////////////////
   // TESTS
@@ -44,25 +45,23 @@ describe('Auth Service with JwtHelperService spy', () => {
     localStorage.setItem(storageTokenKey, FAKE_VALID_AUTH_TOKEN);
 
     // Simulate a return value if isTokenExpired() is called
-    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
+    spyOn(jwtHelperService, 'isTokenExpired').and.returnValue(false);
 
     const res = service.isLoggedIn();
 
-     expect(res).toBeTruthy();
-     expect(jwtHelperService.isTokenExpired).toHaveBeenCalled();
+    expect(res).toBeTruthy();
+    expect(jwtHelperService.isTokenExpired).toHaveBeenCalled();
   });
 
   it('isLoggedIn() should return false if there is no auth token', () => {
     // No token in local storage
 
     // Spy for external dependency but should not be called anyway
-    spyOn(jwtHelperService, "isTokenExpired").and.returnValue(false);
-
+    spyOn(jwtHelperService, 'isTokenExpired').and.returnValue(false);
 
     let res = service.isLoggedIn();
 
-     expect(res).toBeFalsy();
-     expect(jwtHelperService.isTokenExpired).not.toHaveBeenCalled();
+    expect(res).toBeFalsy();
+    expect(jwtHelperService.isTokenExpired).not.toHaveBeenCalled();
   });
-
 });

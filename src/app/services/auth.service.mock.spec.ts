@@ -5,12 +5,15 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { TOKENKEY, FAKE_VALID_AUTH_TOKEN } from './const';
 import { GetToken } from './utils';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 // Declare a fake class for the JwtHelper external service
 class JwtHelperServiceMock {
-  isTokenExpired() : boolean {
-      return false;
+  isTokenExpired(): boolean {
+    return false;
   }
 }
 
@@ -24,14 +27,14 @@ describe('Auth Service with JwtHelperService mock', () => {
     // creates a test Angular Module which we can use to instantiate components
     // perform dependency injection and so on
     TestBed.configureTestingModule({
-    imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
-    providers: [
+      imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
+      providers: [
         AuthService,
         { provide: JwtHelperService, useClass: JwtHelperServiceMock },
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ] // Swap the real JwtHelper service with our fake class
-});
+        provideHttpClientTesting(),
+      ], // Swap the real JwtHelper service with our fake class
+    });
 
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(AuthService);
@@ -42,7 +45,6 @@ describe('Auth Service with JwtHelperService mock', () => {
     service = null;
     localStorage.removeItem(storageTokenKey);
   });
-
 
   ///////////////////////////////////////////////////////////
   // TESTS
@@ -62,5 +64,4 @@ describe('Auth Service with JwtHelperService mock', () => {
     let res = service.isLoggedIn();
     expect(res).toBeFalsy();
   });
-
 });

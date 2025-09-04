@@ -29,9 +29,6 @@ export class ProductDetailComponent implements OnInit {
 
   @Output() favouriteAdded = new EventEmitter<Product>();
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
   constructor() { }
 
   // deleteProductNotTestable(id: number) {

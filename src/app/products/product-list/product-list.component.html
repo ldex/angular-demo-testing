@@ -4,31 +4,21 @@
 
 <h3>{{ message }}</h3>
 
-<ng-template #loading>
-  <h1 class="loading">Loading products</h1>
-</ng-template>
-
 @if ((productsNumber$ | async) > 0) {
-  <div class="right">
-    <span id="productsNumber">{{ productsNumber$ | async }}</span> products displayed |
-    {{ productsTotalNumber$ | async }} on server |
+  <div>
+    {{ productsNumber$ | async }} products loaded ({{ productsTotalNumber$ | async }} total) |
     <span>
       {favourites, plural,
       =0 {no favourite}
       =1 {1 favourite}
       other {{{favourites}} favourites}
     }
-  </span>
-</div>
-<div>
-  <button (click)="sortList('price')" id="sortByPrice">Sort by price</button>
-  <button (click)="sortList('name')" id="sortByName">Sort by name</button>
-  <button (click)="sortList('modifiedDate')" id="sortByDate">Sort by date</button>
-</div>
+    </span>
+  </div>
 @if (products$ | async; as products) {
   <ul class="products">
-    @for (product of products | orderBy:[sorter] | slice:start:end; track product) {
-      <li class="productItem" [title]="product | json" (click)="onSelect(product)"
+    @for (product of products | slice:start:end; track product.id) {
+      <li class="productItem" (click)="onSelect(product)"
         [class.discontinued]="product.discontinued" [class.selected]="product === selectedProduct">
         <span class="name">{{ product.name | uppercase }}</span>
         <span class="description">{{ product.description }}</span>

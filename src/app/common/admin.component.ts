@@ -8,11 +8,6 @@ import { Component, inject } from '@angular/core';
 export class AdminComponent {
     private adminService = inject(AdminService);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() { }
-
     profile: string = '';
 
     getProfile() {

@@ -4,7 +4,9 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/htt
 import { config } from 'src/environments/environment';
 import { BehaviorSubject, Observable, throwError, first, shareReplay, delay, mergeMap, tap } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService {
     private http = inject(HttpClient);
 
@@ -15,9 +17,6 @@ export class ProductService {
     products$: Observable<Product[]> = this.products.asObservable();
     productsTotalNumber$: BehaviorSubject<number> = new BehaviorSubject(0);
     productsToLoad = 10;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         this.loadProducts();

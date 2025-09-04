@@ -1,11 +1,17 @@
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { TOKENKEY, FAKE_VALID_AUTH_TOKEN, AUTH_BASE_URL } from './const';
 import { GetToken } from './utils';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 // Tests in the context of the Angular Framework with a TestBed
 // Replacing HTTP calls with a httpMock
@@ -19,14 +25,14 @@ describe('Auth Service mocking Http', () => {
     // creates a test Angular Module which we can use to instantiate components
     // perform dependency injection and so on
     TestBed.configureTestingModule({
-    imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
-    providers: [
+      imports: [JwtModule.forRoot({ config: { tokenGetter: GetToken } })],
+      providers: [
         AuthService,
         JwtHelperService,
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+        provideHttpClientTesting(),
+      ],
+    });
 
     // resolve dependencies using the TestBed injector
     service = TestBed.inject(AuthService);
@@ -39,7 +45,6 @@ describe('Auth Service mocking Http', () => {
     service = null;
     localStorage.removeItem(storageTokenKey);
   });
-
 
   ///////////////////////////////////////////////////////////
 
@@ -54,29 +59,27 @@ describe('Auth Service mocking Http', () => {
 
   it('should login with admin', () => {
     let result;
-    const dummyResponse = {token: authToken}
+    const dummyResponse = { token: authToken };
 
     service
-      .login("admin", "admin")
-      .subscribe(response => result = response);
+      .login('admin', 'admin')
+      .subscribe((response) => (result = response));
 
-      const req = httpMock.expectOne(baseUrl);
-      expect(req.request.method).toBe("POST");
-      req.flush(dummyResponse);
+    const req = httpMock.expectOne(baseUrl);
+    expect(req.request.method).toBe('POST');
+    req.flush(dummyResponse);
 
-      expect(result).toBeTruthy();
+    expect(result).toBeTruthy();
   });
 
   it('should not login with user', () => {
     let result;
-    let dummyResponse = {error: 'Invalid!'}
+    let dummyResponse = { error: 'Invalid!' };
 
-    service
-    .login("user", "user")
-    .subscribe(response => result = response);
+    service.login('user', 'user').subscribe((response) => (result = response));
 
     const req = httpMock.expectOne(baseUrl);
-    expect(req.request.method).toBe("POST");
+    expect(req.request.method).toBe('POST');
     req.flush(dummyResponse);
 
     expect(result).toBeFalsy();

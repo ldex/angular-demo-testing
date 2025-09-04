@@ -19,8 +19,7 @@ describe('Auth Service with JwtHelperService auto spy', () => {
     imports: [JwtModule],
     providers: [
         AuthService,
-        provideAutoSpy(JwtHelperService) // same as {provide: JwtHelperService, useClass: createSpyFromClass(JwtHelperService)}
-        ,
+        provideAutoSpy(JwtHelperService), // same as {provide: JwtHelperService, useClass: createSpyFromClass(JwtHelperService)}
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
     ]

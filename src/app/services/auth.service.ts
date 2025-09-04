@@ -9,7 +9,9 @@ interface AuthResponse {
   token: string
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private http = inject(HttpClient);
   private jwtHelper = inject(JwtHelperService);
@@ -17,9 +19,6 @@ export class AuthService {
 
   private storageTokenKey: string = TOKENKEY;
   public baseUrl: string = AUTH_BASE_URL;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
 
   constructor() {
   }

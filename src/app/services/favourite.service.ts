@@ -1,7 +1,9 @@
 import { Product } from './../products/product.interface';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FavouriteService {
 
     constructor() { }
