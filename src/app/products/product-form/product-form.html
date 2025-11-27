@@ -1,0 +1,46 @@
+<h3>Create New Product</h3>
+<form (submit)="submitForm()" novalidate>
+    <label for="name">Name:</label>
+    <input id="name" type="text" [field]="productForm.name">
+    <br />
+
+    <label for="price">Price:</label>
+    <input id="price" type="number" [field]="productForm.price">
+    <br />
+
+    <label for="description">Description:</label>
+    <textarea id="description" [field]="productForm.description">
+    </textarea>
+    <br />
+
+    <label for="imageUrl">Image url:</label>
+    <input id="imageUrl" type="text" placeholder="http://" [field]="productForm.imageUrl">
+    <br />
+
+    <label for="discontinued">Discontinued?</label>
+    <input id="discontinued" type="checkbox" [field]="productForm.discontinued">
+    <br />
+
+    <label for="fixedPrice">Fixed price?</label>
+    <input id="fixedPrice" type="checkbox" [field]="productForm.fixedPrice">
+    <br />
+
+    <button type="submit" [disabled]="productForm().invalid() || productForm().submitting()">
+        @if (productForm().submitting()) {
+        Saving ...
+        } @else {
+        Save
+        }
+    </button>
+
+    @if (productForm().dirty() && productForm().invalid()) {
+    <p class="errorMessage">Please fix those error(s):</p>
+
+    <ul class="errorMessage">
+        @for (error of productForm().errorSummary(); track $index) {
+        <li>{{ error.message }}</li>
+        }
+    </ul>
+    }
+
+</form>

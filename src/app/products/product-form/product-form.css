@@ -1,0 +1,15 @@
+input:active,
+input:focus,
+input:hover,
+textarea:active,
+textarea:focus,
+textarea:hover {
+  background-color: lightyellow;
+  border-color: yellow;
+}
+
+label {
+    clear: both;
+    float:left;
+    width: 120px;
+}

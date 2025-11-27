@@ -1,0 +1,169 @@
+/* Master Styles */
+h1 {
+  display: inline;
+  background:  linear-gradient(75deg, rgba(241,22,83,1) 8%, rgba(233,4,100,1) 21%, rgba(220,8,125,1) 44%, rgba(151,23,231,1) 74%, rgba(92,68,228,1) 92%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 250%;
+  font-weight: 800;
+  margin: 0px;
+}
+h2,
+h3 {
+  color: #444;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: lighter;
+}
+body {
+  margin: 2em;
+  margin-top: 0.5em;
+}
+body,
+input[text],
+button {
+  color: #888;
+  font-family: Cambria, Georgia;
+}
+a {
+  cursor: hand;
+  color: #F637E3;
+}
+a:hover {
+  color: #0546FF;
+}
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #607d8b;
+  cursor: pointer;
+  cursor: hand;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+}
+button:hover {
+  background-color: #0546FF;
+  color: #fff;
+}
+button:disabled {
+  background-color: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+footer {
+  padding-top: 10px;
+  clear: both;
+}
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+/* Navigation link styles */
+nav a {
+  background-color: #EEE;
+  color: #5C44E4;
+  border: 2px solid #5C44E4;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10rem;
+  position: relative;
+  transition: box-shadow .35s,top .3s,transform .45s;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  box-shadow: 0 1px 0 0 #5C44E4,0 2px 0 0 #5C44E4,0 3px 0 0 #5C44E4;
+  transform: rotateX(0) rotateY(0) rotateZ(0);
+}
+nav a:hover {
+  color: #5C44E4;
+  box-shadow: 0 0 0 0 #5C44E4,0 0 0 0 #5C44E4,0 0 0 0 #5C44E4;
+  top: 3px;
+  transform: rotateX(5deg) rotateY(10deg) rotateZ(.5deg);
+}
+nav a.active {
+  background-color: #F637E3;
+  color: #FFF;
+  box-shadow: 0 0 0 0;
+  top: 3px;
+  border: 2px solid #5C44E4!important;
+  outline: 0;
+}
+
+/* everywhere else */
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+*[disabled] {
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: red;
+}
+
+dialog {
+  background: rgb(241,22,83);
+  background: linear-gradient(75deg, rgba(241,22,83,1) 8%, rgba(233,4,100,1) 21%, rgba(220,8,125,1) 44%, rgba(151,23,231,1) 74%, rgba(92,68,228,1) 92%);
+  color: white;
+  border-color: #000;
+  overflow: hidden;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 0 20px 8px #d0d0d0;
+  height: 100px;
+  width: 200px;
+}
+dialog::backdrop {
+  background: rgba(117, 117, 117, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.modal-loading {
+  display: block;
+  position:   fixed;
+  z-index:    1000;
+  top:        0;
+  left:       0;
+  height:     100%;
+  width:      100%;
+  background: rgba(211, 211, 211, 0.8) url('https://media.tenor.com/kMCwoAD4RNAAAAAi/loading-gif-loading.gif') 50% 30% no-repeat;
+}
+
+
+.loading {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  border-radius: 50%;
+  -webkit-mask:radial-gradient(farthest-side,#0000 40%,#000 41%);
+  background:
+    linear-gradient(0deg ,#f1165380 50%,#f11653FF 0) center/8px 100%,
+    linear-gradient(90deg,#f1165340 50%,#f11653BF 0) center/100% 8px;
+  background-repeat: no-repeat;
+  animation: s3 0.5s infinite steps(12);
+}
+.loading::before,
+.loading::after {
+   content:"";
+   grid-area: 1/1;
+   border-radius: 50%;
+   background:inherit;
+   opacity: 0.915;
+   transform: rotate(30deg);
+}
+.loading::after {
+   opacity: 0.83;
+   transform: rotate(60deg);
+}
+
+@keyframes s3 {
+  100% {transform: rotate(1turn)}
+}

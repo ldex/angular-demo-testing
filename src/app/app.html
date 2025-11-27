@@ -1,0 +1,33 @@
+<header>
+    <h1>
+        {{ title() }}
+    </h1>
+
+    <nav>
+        <a routerLink="/home" routerLinkActive="active">Home</a>
+        <a routerLink="/products" routerLinkActive="active">Products</a>
+        <a routerLink="/contact"  routerLinkActive="active">Contact</a>
+        <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer>
+  <hr>
+    &copy; 2025 <a href="http://www.angularacademy.ca" target="_blank">Angular Academy</a> (using Angular {{ version() }})
+  <div class="right">
+    @if (!isLoggedIn()) {
+      <a (click)="login()" style="cursor: pointer">login</a>
+    } @else {
+      <a (click)="logout()" style="cursor: pointer">logout</a>
+    }
+  </div>
+</footer>
+
+@if(loading$ | async) {
+  <div class="modal-loading">
+  </div>
+}

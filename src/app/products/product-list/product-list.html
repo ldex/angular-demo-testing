@@ -1,0 +1,38 @@
+@if (error(); as errorMessage) {
+<div class="errorMessage">
+    {{ errorMessage }}
+</div>
+}
+@else if (isLoading()) {
+<div class="loading"></div>
+} @else {
+<div>
+    {{ products().length }} products
+</div>
+
+<ul class="products">
+    @for (product of products() | orderBy:['-modifiedDate'] | slice:start():end(); track product.id) {
+    <li [class.discontinued]="product.discontinued" (click)="selectProduct(product)"
+        [class.selected]="product === selectedProduct()" [title]="product | json">
+        <span class="name">{{ product.name | uppercase }}</span>
+        <span class="description">{{ product.description }}</span>
+        <span class="price">{{ product.price | currency:'CAD':'symbol-narrow':'.2' }}</span>
+    </li>
+    }
+</ul>
+
+<div class="right">
+    <a routerLink="create">Create new product...</a>
+</div>
+
+
+<div>
+    <button (click)="changePage(-1)" [disabled]="start() == 0">
+        Previous Page
+    </button>
+    Page {{ pageNumber() }}
+    <button (click)="changePage(1)" [disabled]="products().length <= end()">
+        Next Page
+    </button>
+</div>
+}
