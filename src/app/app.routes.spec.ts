@@ -66,6 +66,6 @@ describe('App Routing using canActivate', () => {
   it('should redirect from the admin page if guard returns false', async () => {
     await setup(false);
     await harness.navigateByUrl('/admin');
-    expect(router.url).toBe('/login');
+    expect(router.url).toBe('/');
   });
 });

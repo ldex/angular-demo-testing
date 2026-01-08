@@ -20,7 +20,7 @@ describe('loginRouteGuard', () => {
     this.authServiceMock = {
       isLoggedIn: vi.fn()
     };
-    authServiceMock.isLoggedIn.and.returnValue(isAuthenticated);
+    this.authServiceMock.isLoggedIn.and.returnValue(isAuthenticated);
     TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authServiceMock },
