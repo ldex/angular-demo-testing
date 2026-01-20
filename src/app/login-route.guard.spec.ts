@@ -6,21 +6,21 @@ import { AuthService } from './core/auth-service';
 import { Component } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 
-@Component({ template: '<h1>Protected Page</h1>' })
+@Component({ template: '<h1>Protected Page</h1>', selector: 'app-protected' })
 class ProtectedComponent {}
 
-@Component({ template: '<h1>Login Page</h1>' })
+@Component({ template: '<h1>Login Page</h1>', selector: 'app-login' })
 class LoginComponent {}
 
 describe('loginRouteGuard', () => {
-  let authServiceMock;
+  let authServiceMock: { isLoggedIn: ReturnType<typeof vi.fn> };
   let harness: RouterTestingHarness;
 
   async function setup(isAuthenticated: boolean) {
-    this.authServiceMock = {
+    authServiceMock = {
       isLoggedIn: vi.fn()
     };
-    this.authServiceMock.isLoggedIn.and.returnValue(isAuthenticated);
+    vi.spyOn(authServiceMock, 'isLoggedIn').mockReturnValue(isAuthenticated);
     TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authServiceMock },
