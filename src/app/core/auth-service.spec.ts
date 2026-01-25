@@ -8,21 +8,27 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let apiService: { login: ReturnType<typeof vi.fn> };
-  let storage: { storeToken: ReturnType<typeof vi.fn>; removeTokens: ReturnType<typeof vi.fn>; getToken: ReturnType<typeof vi.fn> };
-  let jwtHelper: { isTokenExpired: ReturnType<typeof vi.fn> };
+
+  // Define stubs
+  let apiServiceStub: { login: ReturnType<typeof vi.fn> };
+  let storageStub: { storeToken: ReturnType<typeof vi.fn>; removeTokens: ReturnType<typeof vi.fn>; getToken: ReturnType<typeof vi.fn> };
+  let jwtHelperStub: { isTokenExpired: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
-    apiService = { login: vi.fn() };
-    storage = { storeToken: vi.fn(), removeTokens: vi.fn(), getToken: vi.fn() };
-    jwtHelper = { isTokenExpired: vi.fn() };
+    apiServiceStub = { login: vi.fn() };
+    storageStub = {
+      storeToken: vi.fn(),
+      removeTokens: vi.fn(),
+      getToken: vi.fn()
+    };
+    jwtHelperStub = { isTokenExpired: vi.fn() };
 
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-        { provide: ApiService, useValue: apiService },
-        { provide: StorageService, useValue: storage },
-        { provide: JwtHelperService, useValue: jwtHelper },
+        { provide: ApiService, useValue: apiServiceStub },
+        { provide: StorageService, useValue: storageStub },
+        { provide: JwtHelperService, useValue: jwtHelperStub },
       ],
     });
 
@@ -30,76 +36,79 @@ describe('AuthService', () => {
   });
 
   afterEach(() => {
+    // Cleanup to prevent affecting other tests
     vi.restoreAllMocks();
   });
 
   it('login stores token and returns true on successful response', async () => {
-    apiService.login.mockReturnValue(of({ token: 'tok' }));
+    apiServiceStub.login.mockReturnValue(of({ token: 'valid-token' }));
+    // Mocking getToken for the computed signal
+    storageStub.getToken.mockReturnValue('valid-token');
+    jwtHelperStub.isTokenExpired.mockReturnValue(false);
 
-    const result = await firstValueFrom(service.login('u', 'p'));
+    const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(true);
-    expect(storage.storeToken).toHaveBeenCalledWith('tok');
-    // loggedIn signal should be true
-    expect((service as unknown as any).loggedIn()).toBe(true);
+    expect(storageStub.storeToken).toHaveBeenCalledWith('valid-token');
+
+    expect(service.isLoggedIn()).toBe(true);
   });
 
   it('login returns false and logs error when API responds with error property', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    apiService.login.mockReturnValue(of({ error: 'bad creds' }));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    apiServiceStub.login.mockReturnValue(of({ error: 'Unauthorized' }));
 
-    const result = await firstValueFrom(service.login('u', 'p'));
+    const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(false);
-    expect(storage.storeToken).not.toHaveBeenCalled();
+    expect(storageStub.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(service.isLoggedIn()).toBe(false);
   });
 
   it('login returns false on network/error (catchError path) and logs error', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    apiService.login.mockReturnValue(throwError(() => new Error('network')));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    apiServiceStub.login.mockReturnValue(throwError(() => new Error('network')));
 
-    const result = await firstValueFrom(service.login('u', 'p'));
+    const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(false);
-    expect(storage.storeToken).not.toHaveBeenCalled();
+    expect(storageStub.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(service.isLoggedIn()).toBe(false);
   });
 
   it('logout removes tokens and sets loggedIn false', () => {
-    // set loggedIn true first
-    (service as unknown as any).loggedIn.set(true);
+    // Arrange: Start as logged in
+    (service as any).loggedIn.set(true);
 
-    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     service.logout();
 
-    expect(storage.removeTokens).toHaveBeenCalled();
-    expect((service as unknown as any).loggedIn()).toBe(false);
+    expect(storageStub.removeTokens).toHaveBeenCalled();
+    expect(service.isLoggedIn()).toBe(false);
     expect(infoSpy).toHaveBeenCalled();
-    infoSpy.mockRestore();
   });
 
   it('isLoggedIn returns true when loggedIn true, token present and not expired', () => {
-    (service as unknown as any).loggedIn.set(true);
-    storage.getToken.mockReturnValue('token');
-    jwtHelper.isTokenExpired.mockReturnValue(false);
+    (service as any).loggedIn.set(true);
+    storageStub.getToken.mockReturnValue('token');
+    jwtHelperStub.isTokenExpired.mockReturnValue(false);
 
     expect(service.isLoggedIn()).toBe(true);
   });
 
   it('isLoggedIn returns false when token is missing', () => {
-    (service as unknown as any).loggedIn.set(true);
-    storage.getToken.mockReturnValue(null);
+    (service as any).loggedIn.set(true);
+    storageStub.getToken.mockReturnValue(null);
 
     expect(service.isLoggedIn()).toBe(false);
   });
 
   it('isLoggedIn returns false when token expired', () => {
-    (service as unknown as any).loggedIn.set(true);
-    storage.getToken.mockReturnValue('token');
-    jwtHelper.isTokenExpired.mockReturnValue(true);
+    (service as any).loggedIn.set(true);
+    storageStub.getToken.mockReturnValue('token');
+    jwtHelperStub.isTokenExpired.mockReturnValue(true);
 
     expect(service.isLoggedIn()).toBe(false);
   });

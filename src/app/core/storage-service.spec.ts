@@ -5,7 +5,8 @@ import { config } from '../../environments/environment';
 
 describe('StorageService', () => {
   let service: StorageService;
-  let storageMock: {
+
+  let storageMockStud: {
     getItem: ReturnType<typeof vi.fn>;
     setItem: ReturnType<typeof vi.fn>;
     removeItem: ReturnType<typeof vi.fn>;
@@ -13,13 +14,14 @@ describe('StorageService', () => {
 
   beforeEach(() => {
     // provide a clean stub for global localStorage so tests don't depend on real browser storage
-    storageMock = {
+    storageMockStud = {
       getItem: vi.fn(() => null),
       setItem: vi.fn(),
       removeItem: vi.fn(),
     };
-    // stub global localStorage
-    vi.stubGlobal('localStorage', storageMock as unknown as Storage);
+    // Using vi.stubGlobal is the modern, recommended way to handle localStorage
+    // it completely isolates tests from the actual browser environment (or the JSDOM/HappyDOM storage) and prevents tests from "polluting" each other
+    vi.stubGlobal('localStorage', storageMockStud as unknown as Storage);
 
     TestBed.configureTestingModule({
       providers: [StorageService],
@@ -28,6 +30,7 @@ describe('StorageService', () => {
   });
 
   afterEach(() => {
+    // Cleanup to prevent affecting other tests
     vi.restoreAllMocks();
     // remove any global stubs
     vi.unstubAllGlobals();
@@ -38,22 +41,22 @@ describe('StorageService', () => {
 
     service.storeToken(token);
 
-    expect(storageMock.setItem).toHaveBeenCalledWith(config.storageTokenKey, token);
+    expect(storageMockStud.setItem).toHaveBeenCalledWith(config.storageTokenKey, token);
   });
 
   it('getToken returns value from localStorage.getItem for configured key', () => {
     const token = 'token-value';
-    storageMock.getItem.mockReturnValue(token);
+    storageMockStud.getItem.mockReturnValue(token);
 
     const result = service.getToken();
 
-    expect(storageMock.getItem).toHaveBeenCalledWith(config.storageTokenKey);
+    expect(storageMockStud.getItem).toHaveBeenCalledWith(config.storageTokenKey);
     expect(result).toBe(token);
   });
 
   it('removeTokens calls localStorage.removeItem with configured key', () => {
     service.removeTokens();
 
-    expect(storageMock.removeItem).toHaveBeenCalledWith(config.storageTokenKey);
+    expect(storageMockStud.removeItem).toHaveBeenCalledWith(config.storageTokenKey);
   });
 });

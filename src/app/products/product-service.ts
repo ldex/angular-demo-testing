@@ -3,7 +3,7 @@ import { ApiService } from '../core/api-service';
 import { Product } from '../models/product';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +45,29 @@ export class ProductService {
     return this.productsCache;
   }
 
-  createProduct(newProduct: Omit<Product, 'id'>): Promise<void> {
+  async createProduct(newProduct: Omit<Product, 'id'>): Promise<Product> {
+    this.loading.set(true);
+    this.error.set(undefined);
+
+    try {
+      // 1. Convert Observable to Promise and await it
+      const product = await lastValueFrom(this.apiService.createProduct(newProduct));
+
+      // 2. Perform side effects (update cache)
+      this.productsCache.update((products) => [...products, product]);
+      this.loading.set(false);
+
+      return product;
+    } catch (err) {
+      // 3. Handle error through our existing helper
+      this.handleError(err as HttpErrorResponse, 'Failed to save product.');
+
+      // 4. Re-throw so the component knows the operation failed
+      throw err;
+    }
+  }
+
+  createProduct_old(newProduct: Omit<Product, 'id'>): Promise<void> {
     this.apiService.createProduct(newProduct).subscribe({
       next: (product) => {
         this.productsCache.update((products) => [...products, product]);

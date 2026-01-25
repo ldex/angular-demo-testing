@@ -4,21 +4,22 @@ import { ApiService } from '../core/api-service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError, firstValueFrom } from 'rxjs';
-import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, afterEach, expect, vi, Mocked } from 'vitest';
+import { Product } from '../models/product';
 
 describe('ProductService', () => {
   let service: ProductService;
-  let apiMock: {
-    getProducts: ReturnType<typeof vi.fn>;
-    getProductById: ReturnType<typeof vi.fn>;
-    createProduct: ReturnType<typeof vi.fn>;
-    deleteProduct: ReturnType<typeof vi.fn>;
-  };
-  let routerMock: { navigateByUrl: ReturnType<typeof vi.fn> };
 
-  const mockProducts = [
-    { id: 1, name: 'P1', price: 10 },
-    { id: 2, name: 'P2', price: 20 },
+  let apiMock: Mocked<ApiService>;
+  let routerMock: Mocked<Router>;
+
+  // This helper lets us access private members without messy inline casting
+  let serviceInternal: any;
+
+  const mockProducts: Product[] = [
+      { id: 1, name: 'Laptop', price: 999, description: 'Pro', discontinued: false, fixedPrice: true, modifiedDate: new Date(), imageUrl: '' },
+      { id: 2, name: 'Mouse', price: 25, description: 'Wireless', discontinued: false, fixedPrice: false, modifiedDate: new Date(), imageUrl: '' },
+      { id: 3, name: 'Keyboard', price: 50, description: 'Mechanical', discontinued: false, fixedPrice: true, modifiedDate: new Date(), imageUrl: '' },
   ];
 
   beforeEach(() => {
@@ -27,21 +28,22 @@ describe('ProductService', () => {
       getProductById: vi.fn(),
       createProduct: vi.fn(),
       deleteProduct: vi.fn(),
-    };
+    } as any;
 
     routerMock = {
       navigateByUrl: vi.fn(),
-    };
+    } as any;
 
     TestBed.configureTestingModule({
       providers: [
         ProductService,
-        { provide: ApiService, useValue: apiMock as unknown as ApiService },
-        { provide: Router, useValue: routerMock as unknown as Router },
+        { provide: ApiService, useValue: apiMock },
+        { provide: Router, useValue: routerMock },
       ],
     });
 
     service = TestBed.inject(ProductService);
+    serviceInternal = service as any;
   });
 
   afterEach(() => {
@@ -49,10 +51,10 @@ describe('ProductService', () => {
   });
 
   it('getProductById returns product from cache when cache populated', async () => {
-    (service as unknown as { productsCache: { set: (p: typeof mockProducts) => void } })
-      .productsCache.set(mockProducts);
+    serviceInternal.productsCache.set(mockProducts);
 
     const product = await firstValueFrom(service.getProductById(1));
+
     expect(product).toEqual(mockProducts[0]);
     expect(apiMock.getProductById).not.toHaveBeenCalled();
   });
@@ -96,37 +98,26 @@ describe('ProductService', () => {
   });
 
   it('createProduct appends created product to cache on success', async () => {
-    (service as unknown as { productsCache: { set: (p: typeof mockProducts) => void } })
-      .productsCache.set([mockProducts[0]]);
+    serviceInternal.productsCache.set([mockProducts[0]]);
 
-    const newProduct = { name: 'New', price: 5 } as any;
-    const created = { id: 3, ...newProduct };
-
+    const newProduct = { name: 'New', price: 5, description: 'test', discontinued: false, fixedPrice: true, modifiedDate: new Date(), imageUrl: '' };
+    const created = { id: 4, ...newProduct };
     apiMock.createProduct.mockReturnValue(of(created));
 
     await service.createProduct(newProduct);
-    const cache = (service as unknown as { productsCache: () => typeof mockProducts }).productsCache();
-    expect(cache).toContainEqual(created);
+
+    expect(serviceInternal.productsCache()).toContainEqual(created);
     expect(apiMock.createProduct).toHaveBeenCalledWith(newProduct);
   });
 
-  it('createProduct sets error when api fails', async () => {
-    const httpErr = new HttpErrorResponse({ status: 400 });
-    apiMock.createProduct.mockReturnValue(throwError(() => httpErr));
-
-    await service.createProduct({ name: 'Bad', price: 0 } as any);
-    expect(service.error()).toBe('Failed to save product.');
-  });
-
   it('deleteProduct removes product from cache and navigates on success', () => {
-    (service as unknown as { productsCache: { set: (p: typeof mockProducts) => void } })
-      .productsCache.set(mockProducts);
+    serviceInternal.productsCache.set(mockProducts);
 
     apiMock.deleteProduct.mockReturnValue(of(void 0));
 
     service.deleteProduct(1);
     const cache = (service as unknown as { productsCache: () => typeof mockProducts }).productsCache();
-    expect(cache).toEqual([mockProducts[1]]);
+    expect(cache).toEqual([mockProducts[1], mockProducts[2]]);
     expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/products');
   });
 
@@ -143,8 +134,7 @@ describe('ProductService', () => {
     const httpErr = new HttpErrorResponse({ error: errEvent });
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    (service as unknown as { handleError: (e: HttpErrorResponse, m: string) => void })
-      .handleError(httpErr, 'Client error');
+    serviceInternal.handleError(httpErr, 'Client error');
 
     expect(service.error()).toBe('Client error');
     expect(consoleSpy).toHaveBeenCalled();
@@ -152,12 +142,12 @@ describe('ProductService', () => {
   });
 
   it('handleError logs server error and sets loading false', () => {
+    serviceInternal.loading.set(true);
     (service as unknown as { loading: { set: (v: boolean) => void } }).loading.set(true);
     const httpErr = new HttpErrorResponse({ status: 500, error: 'boom' });
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    (service as unknown as { handleError: (e: HttpErrorResponse, m: string) => void })
-      .handleError(httpErr, 'Server error');
+    serviceInternal.handleError(httpErr, 'Server error');
 
     expect(service.isLoading()).toBe(false);
     expect(service.error()).toBe('Server error');

@@ -11,7 +11,7 @@ import { Product } from '../models/product';
 describe('ApiService', () => {
   let service: ApiService;
   let httpCtrl: HttpTestingController;
-  let storageStub: Partial<StorageService>;
+  let storageStub: { getToken: ReturnType<typeof vi.fn> };
 
   const mockProducts = [
     { id: 1, name: 'P1', price: 10 },
@@ -19,7 +19,9 @@ describe('ApiService', () => {
   ];
 
   beforeEach(() => {
-    storageStub = { getToken: vi.fn() };
+    storageStub = {
+      getToken: vi.fn()
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -36,10 +38,9 @@ describe('ApiService', () => {
 
   afterEach(() => {
     httpCtrl.verify();
+    // Cleanup to prevent affecting other tests
     vi.restoreAllMocks();
-    try {
-      vi.useRealTimers();
-    } catch {}
+    vi.useRealTimers();
   });
 
   it('getProducts should GET products and respect delay', async () => {
@@ -101,7 +102,7 @@ describe('ApiService', () => {
   it('getUserProfile should use token from StorageService and map profile', async () => {
     const token = 'token-xyz';
     const profile = { name: 'Alice' };
-    (storageStub.getToken as ReturnType<typeof vi.fn>).mockReturnValue(token);
+    storageStub.getToken.mockReturnValue(token);
 
     const resultPromise = firstValueFrom(service.getUserProfile());
 
@@ -114,13 +115,61 @@ describe('ApiService', () => {
     expect(res).toEqual(profile);
   });
 
+  it('getUserProfile should throw an error when the server returns a 401', async () => {
+    storageStub.getToken.mockReturnValue('expired-token');
+
+    const resultPromise = firstValueFrom(service.getUserProfile());
+
+    const req = httpCtrl.expectOne(config.adminApiUrl);
+
+    // Respond with a 401 status
+    req.flush('Unauthorized', {
+      status: 401,
+      statusText: 'Unauthorized'
+    });
+
+    // We expect the promise to reject
+    await expect(resultPromise).rejects.toSatisfy((error) => {
+      return error.status === 401;
+    });
+  });
+
+  it('getProducts should handle a 500 Server Error', async () => {
+    // We use fake timers because the service has a delay(1000)
+    vi.useFakeTimers();
+
+    const resultPromise = firstValueFrom(service.getProducts());
+
+    const req = httpCtrl.expectOne(config.productsApiUrl);
+    req.flush('Internal Server Error', {
+      status: 500,
+      statusText: 'Server Error'
+    });
+
+    // Advance time so the delay/retry logic (if any) executes
+    vi.advanceTimersByTime(1000);
+
+    await expect(resultPromise).rejects.toBeTruthy();
+  });
+
+  it('should handle a network-level failure', async () => {
+    const resultPromise = firstValueFrom(service.getProducts());
+
+    const req = httpCtrl.expectOne(config.productsApiUrl);
+
+    // Simulate a ProgressEvent (network error)
+    req.error(new ErrorEvent('Network error'));
+
+    await expect(resultPromise).rejects.toBeTruthy();
+  });
+
   it('login should POST credentials to auth API and return auth response', async () => {
     const authResp = { token: 't', user: { id: 1 } };
-    const resultPromise = firstValueFrom(service.login('me@x', 'pwd'));
+    const resultPromise = firstValueFrom(service.login('me@mail.com', 'pwd'));
 
     const req = httpCtrl.expectOne(config.authApiUrl);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ email: 'me@x', password: 'pwd' });
+    expect(req.request.body).toEqual({ email: 'me@mail.com', password: 'pwd' });
     req.flush(authResp);
 
     const res = await resultPromise;

@@ -13,7 +13,7 @@
 <ul class="products">
     @for (product of products() | orderBy:['-modifiedDate'] | slice:start():end(); track product.id) {
     <li [class.discontinued]="product.discontinued" (click)="selectProduct(product)"
-        [class.selected]="product === selectedProduct()" [title]="product | json">
+        [title]="product | json">
         <span class="name">{{ product.name | uppercase }}</span>
         <span class="description">{{ product.description }}</span>
         <span class="price">{{ product.price | currency:'CAD':'symbol-narrow':'.2' }}</span>

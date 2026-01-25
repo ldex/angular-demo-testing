@@ -34,7 +34,6 @@ export class ProductList {
   }
 
   protected selectProduct(product: Product) {
-    this.selectedProduct.set(product);
     this.router.navigate(['/products', product.id]);
   }
 }
