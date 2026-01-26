@@ -80,7 +80,6 @@ describe('ProductForm', () => {
 
     // wait for microtasks so the async submit handler can run and await createProduct
     await Promise.resolve();
-    await Promise.resolve();
 
     // assert
     expect(productServiceMock.createProduct).toHaveBeenCalled();

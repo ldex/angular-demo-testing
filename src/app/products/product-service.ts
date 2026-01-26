@@ -50,35 +50,20 @@ export class ProductService {
     this.error.set(undefined);
 
     try {
-      // 1. Convert Observable to Promise and await it
+      // Convert Observable to Promise and await it
       const product = await lastValueFrom(this.apiService.createProduct(newProduct));
 
-      // 2. Perform side effects (update cache)
+      // Perform side effects (update cache)
       this.productsCache.update((products) => [...products, product]);
       this.loading.set(false);
 
       return product;
     } catch (err) {
-      // 3. Handle error through our existing helper
       this.handleError(err as HttpErrorResponse, 'Failed to save product.');
 
-      // 4. Re-throw so the component knows the operation failed
+      // Re-throw so the component knows the operation failed
       throw err;
     }
-  }
-
-  createProduct_old(newProduct: Omit<Product, 'id'>): Promise<void> {
-    this.apiService.createProduct(newProduct).subscribe({
-      next: (product) => {
-        this.productsCache.update((products) => [...products, product]);
-        console.log('Product saved on the server with id: ' + product.id);
-      },
-      error: (error) => {
-        this.handleError(error, 'Failed to save product.');
-        return Promise.reject();
-      },
-    });
-    return Promise.resolve();
   }
 
   deleteProduct(id: number) {

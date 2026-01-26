@@ -55,7 +55,7 @@ describe('ApiService', () => {
     // advance the delay applied in the service
     vi.advanceTimersByTime(1000);
     // allow microtasks to resolve
-    await Promise.resolve();
+    vi.runAllTimersAsync();
 
     const products = await resultPromise;
     expect(products).toEqual(mockProducts);
