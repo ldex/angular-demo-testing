@@ -9,26 +9,26 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 describe('AuthService', () => {
   let service: AuthService;
 
-  // Define stubs
-  let apiServiceStub: { login: ReturnType<typeof vi.fn> };
-  let storageStub: { storeToken: ReturnType<typeof vi.fn>; removeTokens: ReturnType<typeof vi.fn>; getToken: ReturnType<typeof vi.fn> };
-  let jwtHelperStub: { isTokenExpired: ReturnType<typeof vi.fn> };
+  // Define mocks
+  let apiServiceMock: { login: ReturnType<typeof vi.fn> };
+  let storageMock: { storeToken: ReturnType<typeof vi.fn>; removeTokens: ReturnType<typeof vi.fn>; getToken: ReturnType<typeof vi.fn> };
+  let jwtHelperMock: { isTokenExpired: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
-    apiServiceStub = { login: vi.fn() };
-    storageStub = {
+    apiServiceMock = { login: vi.fn() };
+    storageMock = {
       storeToken: vi.fn(),
       removeTokens: vi.fn(),
       getToken: vi.fn()
     };
-    jwtHelperStub = { isTokenExpired: vi.fn() };
+    jwtHelperMock = { isTokenExpired: vi.fn() };
 
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-        { provide: ApiService, useValue: apiServiceStub },
-        { provide: StorageService, useValue: storageStub },
-        { provide: JwtHelperService, useValue: jwtHelperStub },
+        { provide: ApiService, useValue: apiServiceMock },
+        { provide: StorageService, useValue: storageMock },
+        { provide: JwtHelperService, useValue: jwtHelperMock },
       ],
     });
 
@@ -41,39 +41,40 @@ describe('AuthService', () => {
   });
 
   it('login stores token and returns true on successful response', async () => {
-    apiServiceStub.login.mockReturnValue(of({ token: 'valid-token' }));
+    apiServiceMock.login.mockReturnValue(of({ token: 'valid-token' }));
     // Mocking getToken for the computed signal
-    storageStub.getToken.mockReturnValue('valid-token');
-    jwtHelperStub.isTokenExpired.mockReturnValue(false);
+    storageMock.getToken.mockReturnValue('valid-token');
+    jwtHelperMock.isTokenExpired.mockReturnValue(false);
 
     const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(true);
-    expect(storageStub.storeToken).toHaveBeenCalledWith('valid-token');
+    expect(apiServiceMock.login).toHaveBeenCalledWith('user', 'password');
+    expect(storageMock.storeToken).toHaveBeenCalledWith('valid-token');
 
     expect((service as any).loggedIn()).toBe(true);
   });
 
   it('login returns false and logs error when API responds with error property', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    apiServiceStub.login.mockReturnValue(of({ error: 'Unauthorized' }));
+    apiServiceMock.login.mockReturnValue(of({ error: 'Unauthorized' }));
 
     const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(false);
-    expect(storageStub.storeToken).not.toHaveBeenCalled();
+    expect(storageMock.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
     expect((service as any).loggedIn()).toBe(false);
   });
 
   it('login returns false on network/error (catchError path) and logs error', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    apiServiceStub.login.mockReturnValue(throwError(() => new Error('network')));
+    apiServiceMock.login.mockReturnValue(throwError(() => new Error('network')));
 
     const result = await firstValueFrom(service.login('user', 'password'));
 
     expect(result).toBe(false);
-    expect(storageStub.storeToken).not.toHaveBeenCalled();
+    expect(storageMock.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
     expect((service as any).loggedIn()).toBe(false);
   });
@@ -85,30 +86,30 @@ describe('AuthService', () => {
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     service.logout();
 
-    expect(storageStub.removeTokens).toHaveBeenCalled();
+    expect(storageMock.removeTokens).toHaveBeenCalled();
     expect(service.isLoggedIn()).toBe(false);
     expect(infoSpy).toHaveBeenCalled();
   });
 
   it('isLoggedIn returns true when loggedIn true, token present and not expired', () => {
     (service as any).loggedIn.set(true);
-    storageStub.getToken.mockReturnValue('token');
-    jwtHelperStub.isTokenExpired.mockReturnValue(false);
+    storageMock.getToken.mockReturnValue('token');
+    jwtHelperMock.isTokenExpired.mockReturnValue(false);
 
     expect(service.isLoggedIn()).toBe(true);
   });
 
   it('isLoggedIn returns false when token is missing', () => {
     (service as any).loggedIn.set(true);
-    storageStub.getToken.mockReturnValue(null);
+    storageMock.getToken.mockReturnValue(null);
 
     expect(service.isLoggedIn()).toBe(false);
   });
 
   it('isLoggedIn returns false when token expired', () => {
     (service as any).loggedIn.set(true);
-    storageStub.getToken.mockReturnValue('token');
-    jwtHelperStub.isTokenExpired.mockReturnValue(true);
+    storageMock.getToken.mockReturnValue('token');
+    jwtHelperMock.isTokenExpired.mockReturnValue(true);
 
     expect(service.isLoggedIn()).toBe(false);
   });

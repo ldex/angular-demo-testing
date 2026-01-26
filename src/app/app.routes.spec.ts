@@ -24,25 +24,31 @@ describe('Basic App Routing', () => {
   it('should navigate to the home page for "" path', async () => {
     await harness.navigateByUrl('/');
     expect(router.url).toBe('/home');
-    expect(harness.routeDebugElement.componentInstance instanceof Home).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(Home);
+  });
+
+  it('should navigate to the home page for "/home" path', async () => {
+    await harness.navigateByUrl('/home');
+    expect(router.url).toBe('/home');
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(Home);
   });
 
   it('should navigate to products and load child routes', async () => {
     await harness.navigateByUrl('/products');
     expect(router.url).toBe('/products');
-    expect(harness.routeDebugElement.componentInstance instanceof Products).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(Products);
   });
 
   it('should navigate to the contact page for "/contact" path', async () => {
     await harness.navigateByUrl('/contact');
     expect(router.url).toBe('/contact');
-    expect(harness.routeDebugElement.componentInstance instanceof Contact).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(Contact);
   });
 
   it('should navigate to the error page for an unknown path', async () => {
     await harness.navigateByUrl('/unknown-path');
     expect(router.url).toBe('/404');
-    expect(harness.routeDebugElement.componentInstance instanceof NavError).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(NavError);
   });
 });
 
@@ -81,13 +87,13 @@ describe('App Routing using canActivate', () => {
     await setup(true); // user is authenticated
     await harness.navigateByUrl('/admin');
     expect(router.url).toBe('/admin');
-    expect(harness.routeDebugElement.componentInstance instanceof AdminMock).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(AdminMock);
   });
 
   it('should redirect to the login page if guard returns false', async () => {
     await setup(false); // user is not authenticated
     await harness.navigateByUrl('/admin');
     expect(router.url).toBe('/login');
-    expect(harness.routeDebugElement.componentInstance instanceof LoginMock).toBe(true);
+    expect(harness.routeDebugElement.componentInstance).toBeInstanceOf(LoginMock);
   });
 });

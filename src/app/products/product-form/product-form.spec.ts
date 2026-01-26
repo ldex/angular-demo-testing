@@ -6,6 +6,7 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 
 describe('ProductForm', () => {
   let component: ProductForm;
+
   let productServiceMock: { createProduct: ReturnType<typeof vi.fn> };
   let routerMock: { navigateByUrl: ReturnType<typeof vi.fn> };
 

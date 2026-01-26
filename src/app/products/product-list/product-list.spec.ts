@@ -3,7 +3,7 @@ import { ProductList } from './product-list';
 import { ProductService } from '../product-service';
 import { provideRouter, Router } from '@angular/router';
 import { signal } from '@angular/core';
-import { describe, it, expect, beforeEach, vi, Mocked } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Product } from '../../models/product';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -13,7 +13,6 @@ describe('ProductList Component', () => {
 
   // Mock dependencies
   let productServiceMock: any;
-  let routerMock: Mocked<Router>;
   let router: Router; // Use the real Router type
 
   const mockProducts: Product[] = [

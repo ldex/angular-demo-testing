@@ -8,7 +8,7 @@ import { AuthService } from '../core/auth-service';
         <h2>Login</h2>
         <form #loginForm="ngForm" (ngSubmit)="loginUser(loginForm)" style="margin-bottom: 80px">
         <label for="username">Username</label>
-        <input type="text" name="username" #username id="username" required ngModel autofocus autocomplete="off">
+        <input type="text" name="username" #username id="username" required ngModel autocomplete="off">
         <br /><br />
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required ngModel autocomplete="off">

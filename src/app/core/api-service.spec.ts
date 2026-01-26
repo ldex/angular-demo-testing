@@ -12,7 +12,7 @@ describe('ApiService', () => {
   let service: ApiService;
   let httpCtrl: HttpTestingController;
 
-  let storageStub: { getToken: ReturnType<typeof vi.fn> };
+  let storageMock: { getToken: ReturnType<typeof vi.fn> };
 
   const mockProducts = [
     { id: 1, name: 'P1', price: 10 },
@@ -20,7 +20,7 @@ describe('ApiService', () => {
   ];
 
   beforeEach(() => {
-    storageStub = {
+    storageMock = {
       getToken: vi.fn()
     };
 
@@ -29,7 +29,7 @@ describe('ApiService', () => {
         ApiService,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: StorageService, useValue: storageStub },
+        { provide: StorageService, useValue: storageMock },
       ],
     });
 
@@ -103,7 +103,7 @@ describe('ApiService', () => {
   it('getUserProfile should use token from StorageService and map profile', async () => {
     const token = 'token-xyz';
     const profile = { name: 'Alice' };
-    storageStub.getToken.mockReturnValue(token);
+    storageMock.getToken.mockReturnValue(token);
 
     const resultPromise = firstValueFrom(service.getUserProfile());
 
@@ -117,7 +117,7 @@ describe('ApiService', () => {
   });
 
   it('getUserProfile should throw an error when the server returns a 401', async () => {
-    storageStub.getToken.mockReturnValue('expired-token');
+    storageMock.getToken.mockReturnValue('expired-token');
 
     const resultPromise = firstValueFrom(service.getUserProfile());
 
