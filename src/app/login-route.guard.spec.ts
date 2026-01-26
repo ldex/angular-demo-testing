@@ -35,15 +35,15 @@ describe('loginRouteGuard', () => {
 
   it('allows navigation when user is logged in', async () => {
     await setup(true);
-    await harness.navigateByUrl('/protected', ProtectedComponent);
+    await harness.navigateByUrl('/protected');
     // The protected component should render when authenticated
-    expect(harness.routeNativeElement?.textContent).toContain('Protected Page');
+    expect(harness.routeDebugElement.componentInstance instanceof ProtectedComponent).toBe(true);
   });
 
   it('redirects to login when user is not logged in', async () => {
     await setup(false);
-    await harness.navigateByUrl('/protected', LoginComponent);
+    await harness.navigateByUrl('/protected');
     // The login component should render after redirect
-    expect(harness.routeNativeElement?.textContent).toContain('Login Page');
+    expect(harness.routeDebugElement.componentInstance instanceof LoginComponent).toBe(true);
   });
 });

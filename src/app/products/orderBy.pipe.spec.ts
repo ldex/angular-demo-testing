@@ -11,7 +11,7 @@ describe('OrderByPipe', () => {
   // Helper data
   const users = [
     { id: 3, name: 'Charlie', age: 30 },
-    { id: 1, name: 'alice', age: 25 }, // lowercase to test case-insensitivity
+    { id: 1, name: 'alice', age: 25 },
     { id: 2, name: 'Bob', age: 25 },
   ];
 
@@ -44,7 +44,6 @@ describe('OrderByPipe', () => {
 
     it('should handle case-insensitive string sorting', () => {
       const result = pipe.transform(users, ['+name']);
-      // 'alice' (lowercase) should come first because of toLowerCase() in comparator
       expect(result[0].name).toBe('alice');
       expect(result[1].name).toBe('Bob');
     });
@@ -61,14 +60,12 @@ describe('OrderByPipe', () => {
       const inputCopy = [...input];
       pipe.transform(input, ['+']);
 
-      expect(input).toEqual(inputCopy); // Original remains [3, 1, 2]
+      expect(input).toEqual(inputCopy);
     });
 
     it('should handle numeric strings correctly', () => {
       const items = [{ val: '10' }, { val: '2' }];
       const result = pipe.transform(items, ['val']);
-      // Without parseFloat, '10' < '2' (string sort).
-      // With your comparator, 2 < 10 (numeric sort).
       expect(result[0].val).toBe('2');
     });
   });
