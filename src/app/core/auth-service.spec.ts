@@ -51,7 +51,7 @@ describe('AuthService', () => {
     expect(result).toBe(true);
     expect(storageStub.storeToken).toHaveBeenCalledWith('valid-token');
 
-    expect(service.isLoggedIn()).toBe(true);
+    expect((service as any).loggedIn()).toBe(true);
   });
 
   it('login returns false and logs error when API responds with error property', async () => {
@@ -63,7 +63,7 @@ describe('AuthService', () => {
     expect(result).toBe(false);
     expect(storageStub.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
-    expect(service.isLoggedIn()).toBe(false);
+    expect((service as any).loggedIn()).toBe(false);
   });
 
   it('login returns false on network/error (catchError path) and logs error', async () => {
@@ -75,7 +75,7 @@ describe('AuthService', () => {
     expect(result).toBe(false);
     expect(storageStub.storeToken).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalled();
-    expect(service.isLoggedIn()).toBe(false);
+    expect((service as any).loggedIn()).toBe(false);
   });
 
   it('logout removes tokens and sets loggedIn false', () => {

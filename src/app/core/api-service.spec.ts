@@ -11,6 +11,7 @@ import { Product } from '../models/product';
 describe('ApiService', () => {
   let service: ApiService;
   let httpCtrl: HttpTestingController;
+
   let storageStub: { getToken: ReturnType<typeof vi.fn> };
 
   const mockProducts = [
