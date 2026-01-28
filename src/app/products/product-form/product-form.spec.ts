@@ -21,13 +21,13 @@ describe('ProductForm', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        ProductForm,
+        ProductForm, // Why providers instead of imports? In this specific case, ProductForm is treated as a plain TypeScript class rather than a UI Component.
         { provide: ProductService, useValue: productServiceMock },
         { provide: Router, useValue: routerMock },
       ],
     });
 
-    component = TestBed.inject(ProductForm);
+    component = TestBed.inject(ProductForm); // We are simply asking the Angular Injector to "new up" the class and resolve its dependencies (Router, etc.) as we are not testing anything HTML related.
   });
 
   afterEach(() => {
